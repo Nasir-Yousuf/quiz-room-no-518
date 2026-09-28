@@ -19,7 +19,7 @@ export const connectDB = async (): Promise<void> => {
     console.warn('[MongoDB] Disconnected from MongoDB');
   });
 
-  mongoose.connection.on('error', (err) => {
+  mongoose.connection.on('error', (err: any) => {
     console.error('[MongoDB] Runtime error:', err);
   });
 };
