@@ -1,5 +1,7 @@
 const rawApiBase = import.meta.env.VITE_API_URL || '';
-const API_BASE = rawApiBase.replace(/\/+$/, '');
+// Strip trailing slashes and accidental trailing '/api' to avoid double /api/api calls
+const API_BASE = rawApiBase.trim().replace(/\/+$/, '').replace(/\/api$/, '');
+
 
 interface RequestOptions extends RequestInit {
   data?: any;
