@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { INotification } from '../types/index.js';
 import { api } from '../api/client.js';
 import { useAuth } from './AuthContext.js';
@@ -29,24 +29,27 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
-  const showToast = (
-    title: string,
-    message: string,
-    type: 'success' | 'error' | 'info' | 'warning' = 'info'
-  ) => {
-    const id = Math.random().toString(36).substring(2, 9);
-    setToasts((prev) => [...prev, { id, title, message, type }]);
-
-    setTimeout(() => {
-      removeToast(id);
-    }, 4500);
-  };
-
-  const removeToast = (id: string) => {
+  const removeToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
-  };
+  }, []);
 
-  const fetchNotifications = async () => {
+  const showToast = useCallback(
+    (
+      title: string,
+      message: string,
+      type: 'success' | 'error' | 'info' | 'warning' = 'info'
+    ) => {
+      const id = Math.random().toString(36).substring(2, 9);
+      setToasts((prev) => [...prev, { id, title, message, type }]);
+
+      setTimeout(() => {
+        removeToast(id);
+      }, 4500);
+    },
+    [removeToast]
+  );
+
+  const fetchNotifications = useCallback(async () => {
     if (!user) return;
     try {
       const res = await api.get('/api/notifications');
@@ -57,7 +60,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     } catch (err) {
       // Quietly ignore network failures in background
     }
-  };
+  }, [user]);
 
   useEffect(() => {
     if (user) {
@@ -68,9 +71,9 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
       setNotifications([]);
       setUnreadCount(0);
     }
-  }, [user]);
+  }, [user, fetchNotifications]);
 
-  const markAsRead = async (id: string) => {
+  const markAsRead = useCallback(async (id: string) => {
     try {
       await api.patch(`/api/notifications/${id}/read`);
       setNotifications((prev) =>
@@ -80,9 +83,9 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     } catch (err) {
       console.error('Failed to mark notification read:', err);
     }
-  };
+  }, []);
 
-  const markAllAsRead = async () => {
+  const markAllAsRead = useCallback(async () => {
     try {
       await api.patch('/api/notifications/all/read');
       setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
@@ -90,21 +93,33 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     } catch (err) {
       console.error('Failed to mark all notifications read:', err);
     }
-  };
+  }, []);
+
+  const contextValue = useMemo(
+    () => ({
+      notifications,
+      unreadCount,
+      toasts,
+      showToast,
+      removeToast,
+      markAsRead,
+      markAllAsRead,
+      fetchNotifications,
+    }),
+    [
+      notifications,
+      unreadCount,
+      toasts,
+      showToast,
+      removeToast,
+      markAsRead,
+      markAllAsRead,
+      fetchNotifications,
+    ]
+  );
 
   return (
-    <NotificationContext.Provider
-      value={{
-        notifications,
-        unreadCount,
-        toasts,
-        showToast,
-        removeToast,
-        markAsRead,
-        markAllAsRead,
-        fetchNotifications,
-      }}
-    >
+    <NotificationContext.Provider value={contextValue}>
       {children}
     </NotificationContext.Provider>
   );

@@ -19,10 +19,18 @@ import {
 export const QuizTakingPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
-  const assignmentId = searchParams.get('assignmentId');
+  const limitParam = searchParams.get('limit') || searchParams.get('count') || '';
+  const assignmentId = searchParams.get('assignmentId') || '';
 
   const navigate = useNavigate();
   const { showToast } = useNotification();
+
+  // Stable refs for callbacks that should never cause effect re-runs
+  const showToastRef = useRef(showToast);
+  showToastRef.current = showToast;
+
+  const navigateRef = useRef(navigate);
+  navigateRef.current = navigate;
 
   const [quiz, setQuiz] = useState<IQuiz | null>(null);
   const [loading, setLoading] = useState(true);
@@ -35,73 +43,98 @@ export const QuizTakingPage: React.FC = () => {
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  const startTimeRef = useRef<number>(Date.now());
+  // Synchronized refs to avoid re-triggering effects during interactions
+  const answersRef = useRef(answers);
+  answersRef.current = answers;
 
-  // Fetch sanitized quiz for taking
+  const tabSwitchesRef = useRef(tabSwitches);
+  tabSwitchesRef.current = tabSwitches;
+
+  const startTimeRef = useRef<number>(Date.now());
+  const submittingRef = useRef(false);
+  const submitQuizRef = useRef<() => void>(() => {});
+
+  // Fetch sanitized quiz once per id/limitParam
   useEffect(() => {
+    let isCancelled = false;
+
     const fetchQuiz = async () => {
       try {
         setLoading(true);
-        const limitParam = searchParams.get('limit') || searchParams.get('count');
         const url = `/api/quizzes/${id}/take` + (limitParam ? `?limit=${limitParam}` : '');
         const res = await api.get(url);
-        if (res.success && res.quiz) {
+
+        if (!isCancelled && res.success && res.quiz) {
           setQuiz(res.quiz);
+          startTimeRef.current = Date.now();
           if (res.quiz.timeLimit > 0) {
             setSecondsRemaining(res.quiz.timeLimit * 60);
           }
         }
       } catch (err: any) {
-        showToast('Error', err.message || 'Failed to load quiz', 'error');
-        navigate('/student/quizzes');
+        if (!isCancelled) {
+          showToastRef.current('Error', err.message || 'Failed to load quiz', 'error');
+          navigateRef.current('/student/quizzes');
+        }
       } finally {
-        setLoading(false);
+        if (!isCancelled) {
+          setLoading(false);
+        }
       }
     };
 
     fetchQuiz();
-  }, [id, searchParams, navigate, showToast]);
 
+    return () => {
+      isCancelled = true;
+    };
+  }, [id, limitParam]);
+
+  // Submit quiz function
   const submitQuiz = useCallback(async () => {
-    if (!quiz || submitting) return;
+    if (!quiz || submittingRef.current) return;
     try {
+      submittingRef.current = true;
       setSubmitting(true);
       const timeSpent = Math.round((Date.now() - startTimeRef.current) / 1000);
 
       const formattedAnswers = quiz.questions.map((q, idx) => ({
         questionId: q._id,
         questionIndex: idx,
-        selectedAnswer: answers[idx] || '',
+        selectedAnswer: answersRef.current[idx] || '',
       }));
 
       const res = await api.post(`/api/attempts/quizzes/${quiz._id}/submit`, {
         answers: formattedAnswers,
         timeSpentSeconds: timeSpent,
-        tabSwitchesCount: tabSwitches,
+        tabSwitchesCount: tabSwitchesRef.current,
         assignmentId: assignmentId || undefined,
       });
 
       if (res.success && res.attempt) {
-        showToast('Quiz Submitted!', 'Grading complete. Reviewing results...', 'success');
-        navigate(`/student/attempts/${res.attempt._id}/result`, { replace: true });
+        showToastRef.current('Quiz Submitted!', 'Grading complete. Reviewing results...', 'success');
+        navigateRef.current(`/student/attempts/${res.attempt._id}/result`, { replace: true });
       }
     } catch (err: any) {
-      showToast('Submission Failed', err.message || 'Error submitting quiz', 'error');
+      showToastRef.current('Submission Failed', err.message || 'Error submitting quiz', 'error');
+      submittingRef.current = false;
       setSubmitting(false);
     }
-  }, [quiz, submitting, answers, tabSwitches, assignmentId, navigate, showToast]);
+  }, [quiz, assignmentId]);
 
-  // Timer countdown
+  submitQuizRef.current = submitQuiz;
+
+  // Single countdown timer instance - NEVER tears down every second!
   useEffect(() => {
-    if (secondsRemaining === null || secondsRemaining <= 0) return;
+    if (!quiz || !quiz.timeLimit || quiz.timeLimit <= 0) return;
 
     const timer = setInterval(() => {
       setSecondsRemaining((prev) => {
         if (prev === null) return null;
         if (prev <= 1) {
           clearInterval(timer);
-          showToast('Time Expired!', 'Auto-submitting your quiz responses...', 'warning');
-          submitQuiz();
+          showToastRef.current('Time Expired!', 'Auto-submitting your quiz responses...', 'warning');
+          submitQuizRef.current();
           return 0;
         }
         return prev - 1;
@@ -109,15 +142,15 @@ export const QuizTakingPage: React.FC = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [secondsRemaining, submitQuiz, showToast]);
+  }, [quiz?._id, quiz?.timeLimit]);
 
-  // Anti-cheating: detect tab switching / blur
+  // Anti-cheating: detect tab switching / blur (attached once)
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden) {
         setTabSwitches((prev) => {
           const next = prev + 1;
-          showToast(
+          showToastRef.current(
             'Proctor Alert',
             `Tab switch detected (${next}). Please remain on the quiz screen.`,
             'warning'
@@ -129,7 +162,7 @@ export const QuizTakingPage: React.FC = () => {
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, [showToast]);
+  }, []);
 
   // Keyboard navigation (1-4 or A-D for options)
   useEffect(() => {
