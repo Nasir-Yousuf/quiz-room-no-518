@@ -6,6 +6,7 @@ import { SubjectBadge, DifficultyBadge } from '../../components/Badge.js';
 import { QuizCardSkeleton } from '../../components/Skeleton.js';
 import { Modal } from '../../components/Modal.js';
 import { useNotification } from '../../context/NotificationContext.js';
+import { useLanguage } from '../../context/LanguageContext.js';
 import {
   Search,
   BookOpen,
@@ -24,6 +25,7 @@ export const QuizDiscoveryPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const { showToast } = useNotification();
+  const { t, translateQuiz, language } = useLanguage();
 
   const [quizzes, setQuizzes] = useState<IQuiz[]>([]);
   const [loading, setLoading] = useState(true);
@@ -125,13 +127,13 @@ export const QuizDiscoveryPage: React.FC = () => {
       <div>
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold mb-2">
           <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
-          <span>Independent Learning & Self-Study Mode</span>
+          <span>{t('discovery.badge', 'Independent Learning & Self-Study Mode')}</span>
         </div>
         <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-          Explore Quizzes & Self-Assessment
+          {t('discovery.title', 'Explore Quizzes & Self-Assessment')}
         </h1>
         <p className="text-sm text-slate-500 mt-1">
-          Take any quiz freely without waiting for a teacher or class enrollment. Choose your preferred topics and question length.
+          {t('discovery.subtitle', 'Take any quiz freely without waiting for a teacher or class enrollment. Choose your preferred topics and question length.')}
         </p>
       </div>
 
@@ -144,11 +146,11 @@ export const QuizDiscoveryPage: React.FC = () => {
                 <Zap className="w-5 h-5 fill-current" />
               </span>
               <h2 className="text-xl font-extrabold tracking-tight">
-                Instant Self-Study Practice Room
+                {t('discovery.practiceRoomTitle', 'Instant Self-Study Practice Room')}
               </h2>
             </div>
             <p className="text-xs sm:text-sm text-indigo-200 max-w-2xl">
-              No teacher or class assignment needed! Select any discipline, pick how many questions you want to solve (15, 30, 50, 100 Qs), and test yourself right now with auto-grading.
+              {t('discovery.practiceRoomSubtitle', 'No teacher or class assignment needed! Select any discipline, pick how many questions you want to solve (15, 30, 50, 100 Qs), and test yourself right now with auto-grading.')}
             </p>
           </div>
 
@@ -158,10 +160,10 @@ export const QuizDiscoveryPage: React.FC = () => {
             className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-500/20 hover:scale-105 active:scale-95 transition shrink-0 disabled:opacity-50"
           >
             {generatingPractice ? (
-              <>Preparing Session...</>
+              <>{language === 'bn' ? 'সেশন প্রস্তুত হচ্ছে...' : 'Preparing Session...'}</>
             ) : (
               <>
-                <Play className="w-4 h-4 fill-current" /> Launch Practice Test ({practiceQuestionCount} Qs)
+                <Play className="w-4 h-4 fill-current" /> {t('discovery.launchBtn', 'Launch Practice Test')} ({practiceQuestionCount} {language === 'bn' ? 'টি প্রশ্ন' : 'Qs'})
               </>
             )}
           </button>
@@ -172,7 +174,7 @@ export const QuizDiscoveryPage: React.FC = () => {
           {/* 1. Pick Topic */}
           <div className="space-y-2">
             <label className="text-xs font-bold text-indigo-200 uppercase tracking-wider block">
-              1. Choose Subject
+              {t('discovery.step1', '1. Choose Subject')}
             </label>
             <div className="flex flex-wrap gap-1.5">
               {[
@@ -196,7 +198,7 @@ export const QuizDiscoveryPage: React.FC = () => {
                       : 'bg-white/10 text-indigo-100 hover:bg-white/20'
                   }`}
                 >
-                  {topic}
+                  {topic === 'All Topics' && language === 'bn' ? 'সব বিষয়' : topic}
                 </button>
               ))}
             </div>
@@ -205,7 +207,7 @@ export const QuizDiscoveryPage: React.FC = () => {
           {/* 2. Choose Question Count */}
           <div className="space-y-2">
             <label className="text-xs font-bold text-indigo-200 uppercase tracking-wider block">
-              2. Questions to Solve
+              {t('discovery.step2', '2. Questions to Solve')}
             </label>
             <div className="grid grid-cols-3 gap-2">
               {[15, 30, 50, 100].map((count) => (
@@ -219,19 +221,19 @@ export const QuizDiscoveryPage: React.FC = () => {
                       : 'bg-white/5 border-white/10 text-indigo-200 hover:bg-white/10'
                   }`}
                 >
-                  {count} Qs
+                  {count} {language === 'bn' ? 'প্রশ্ন' : 'Qs'}
                 </button>
               ))}
             </div>
             <p className="text-[11px] text-indigo-300">
-              Allocates ~1.5 min per question with live countdown timer.
+              {t('discovery.timerNote', 'Allocates ~1.5 min per question with live countdown timer.')}
             </p>
           </div>
 
           {/* 3. Difficulty */}
           <div className="space-y-2">
             <label className="text-xs font-bold text-indigo-200 uppercase tracking-wider block">
-              3. Difficulty Level
+              {t('discovery.step3', '3. Difficulty Level')}
             </label>
             <div className="grid grid-cols-2 gap-2">
               {['All', 'beginner', 'intermediate', 'advanced'].map((lvl) => (
@@ -245,7 +247,9 @@ export const QuizDiscoveryPage: React.FC = () => {
                       : 'bg-white/5 border-white/10 text-indigo-200 hover:bg-white/10'
                   }`}
                 >
-                  {lvl === 'All' ? 'Mixed Levels' : lvl}
+                  {lvl === 'All'
+                    ? (language === 'bn' ? 'মিশ্র স্তর' : 'Mixed Levels')
+                    : (lvl === 'beginner' && language === 'bn' ? 'সহজ' : lvl === 'intermediate' && language === 'bn' ? 'মধ্যম' : lvl === 'advanced' && language === 'bn' ? 'উন্নত' : lvl)}
                 </button>
               ))}
             </div>
@@ -257,9 +261,11 @@ export const QuizDiscoveryPage: React.FC = () => {
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold text-slate-900">
-            Pre-Built Curriculum Quizzes ({quizzes.length})
+            {t('discovery.prebuiltTitle', 'Pre-Built Curriculum Quizzes')} ({quizzes.length})
           </h2>
-          <span className="text-xs text-slate-500">Pick any quiz or customize question count</span>
+          <span className="text-xs text-slate-500">
+            {t('discovery.prebuiltSub', 'Pick any quiz or customize question count')}
+          </span>
         </div>
 
         <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs">
@@ -275,7 +281,7 @@ export const QuizDiscoveryPage: React.FC = () => {
                     : 'text-slate-600 hover:bg-slate-100'
                 }`}
               >
-                {sub}
+                {sub === 'All' && language === 'bn' ? 'সব বিষয়' : sub}
               </button>
             ))}
           </div>
@@ -289,7 +295,7 @@ export const QuizDiscoveryPage: React.FC = () => {
             >
               {difficulties.map((diff) => (
                 <option key={diff} value={diff}>
-                  Difficulty: {diff}
+                  {language === 'bn' ? (diff === 'All' ? 'সব স্তর' : diff) : `Difficulty: ${diff}`}
                 </option>
               ))}
             </select>
@@ -300,7 +306,7 @@ export const QuizDiscoveryPage: React.FC = () => {
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search quiz titles..."
+                placeholder={t('discovery.searchPlaceholder', 'Search quiz titles...')}
                 className="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
               />
             </div>
@@ -317,16 +323,9 @@ export const QuizDiscoveryPage: React.FC = () => {
         </div>
       ) : quizzes.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {quizzes.map((quiz) => {
+          {quizzes.map((rawQuiz) => {
+            const quiz = translateQuiz(rawQuiz);
             const totalQuestionsCount = quiz.questions?.length || 0;
-            const teacherName =
-              typeof quiz.teacher === 'object' && quiz.teacher?.name
-                ? quiz.teacher.name
-                : 'Instructor';
-            const teacherAvatar =
-              typeof quiz.teacher === 'object' && quiz.teacher?.avatar
-                ? quiz.teacher.avatar
-                : `https://api.dicebear.com/7.x/bottts/svg?seed=${teacherName}`;
 
             return (
               <div
@@ -356,7 +355,7 @@ export const QuizDiscoveryPage: React.FC = () => {
                         <HelpCircle className="w-3.5 h-3.5" />
                       </div>
                       <span className="block text-[11px] font-bold text-slate-800">
-                        {totalQuestionsCount} Qs
+                        {totalQuestionsCount} {language === 'bn' ? 'টি প্রশ্ন' : 'Qs'}
                       </span>
                     </div>
 
@@ -365,7 +364,7 @@ export const QuizDiscoveryPage: React.FC = () => {
                         <Clock className="w-3.5 h-3.5" />
                       </div>
                       <span className="block text-[11px] font-bold text-slate-800">
-                        {quiz.timeLimit > 0 ? `${quiz.timeLimit}m` : 'No limit'}
+                        {quiz.timeLimit > 0 ? (language === 'bn' ? `${quiz.timeLimit} মি.` : `${quiz.timeLimit}m`) : (language === 'bn' ? 'সীমাহীন' : 'No limit')}
                       </span>
                     </div>
 
@@ -374,7 +373,7 @@ export const QuizDiscoveryPage: React.FC = () => {
                         <RotateCcw className="w-3.5 h-3.5" />
                       </div>
                       <span className="block text-[11px] font-bold text-slate-800">
-                        {quiz.maxAttempts > 0 ? `${quiz.maxAttempts} tries` : 'Unlimited'}
+                        {quiz.maxAttempts > 0 ? (language === 'bn' ? `${quiz.maxAttempts} বার` : `${quiz.maxAttempts} tries`) : (language === 'bn' ? 'অসীম সুযোগ' : 'Unlimited')}
                       </span>
                     </div>
                   </div>
@@ -388,17 +387,17 @@ export const QuizDiscoveryPage: React.FC = () => {
                         setCustomCountChoice(Math.min(15, totalQuestionsCount || 15));
                       }}
                       className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition"
-                      title="Choose custom question count for this test"
+                      title={language === 'bn' ? 'প্রশ্নের সংখ্যা পরিবর্তন করুন' : 'Choose custom question count for this test'}
                     >
                       <Sliders className="w-3.5 h-3.5 text-slate-500" />
-                      <span>Choose Qs</span>
+                      <span>{t('discovery.chooseQs', 'Choose Qs')}</span>
                     </button>
 
                     <Link
                       to={`/student/quizzes/${quiz._id}/take`}
                       className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 shadow-sm transition shrink-0"
                     >
-                      <BookOpen className="w-3.5 h-3.5" /> Start Quiz
+                      <BookOpen className="w-3.5 h-3.5" /> {t('discovery.startQuiz', 'Start Quiz')}
                     </Link>
                   </div>
                 </div>
@@ -409,9 +408,13 @@ export const QuizDiscoveryPage: React.FC = () => {
       ) : (
         <div className="bg-white rounded-3xl border border-slate-200 p-12 text-center space-y-3">
           <BookOpen className="w-10 h-10 text-slate-300 mx-auto" />
-          <h3 className="font-bold text-slate-800 text-base">No quizzes found</h3>
+          <h3 className="font-bold text-slate-800 text-base">
+            {t('discovery.noQuizzes', 'No quizzes found')}
+          </h3>
           <p className="text-xs text-slate-500 max-w-sm mx-auto">
-            Try adjusting your search criteria or subject filters to find available assessments.
+            {language === 'bn'
+              ? 'অনুসন্ধানের শব্দ বা বিষয় পরিবর্তন করে পুনরায় চেষ্টা করুন।'
+              : 'Try adjusting your search criteria or subject filters to find available assessments.'}
           </p>
           <button
             onClick={() => {
@@ -421,7 +424,7 @@ export const QuizDiscoveryPage: React.FC = () => {
             }}
             className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-700"
           >
-            Reset Filters
+            {t('discovery.resetFilters', 'Reset Filters')}
           </button>
         </div>
       )}
@@ -431,24 +434,26 @@ export const QuizDiscoveryPage: React.FC = () => {
         <Modal
           isOpen={!!selectedQuizForConfig}
           onClose={() => setSelectedQuizForConfig(null)}
-          title="Configure Quiz Session"
+          title={language === 'bn' ? 'কুইজ সেশন কাস্টমাইজ করুন' : 'Configure Quiz Session'}
         >
           <div className="space-y-5">
             <div>
               <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">
-                {selectedQuizForConfig.subject} Assessment
+                {selectedQuizForConfig.subject} {language === 'bn' ? 'অ্যাসেসমেন্ট' : 'Assessment'}
               </span>
               <h3 className="text-lg font-bold text-slate-900 mt-1">
                 {selectedQuizForConfig.title}
               </h3>
               <p className="text-xs text-slate-500 mt-1">
-                This quiz contains {selectedQuizForConfig.questions?.length || 0} questions in total. How many questions would you like to solve?
+                {language === 'bn'
+                  ? `এই কুইজে মোট ${selectedQuizForConfig.questions?.length || 0}টি প্রশ্ন রয়েছে। আপনি কতটি প্রশ্ন সমাধান করতে চান?`
+                  : `This quiz contains ${selectedQuizForConfig.questions?.length || 0} questions in total. How many questions would you like to solve?`}
               </p>
             </div>
 
             <div className="space-y-2">
               <label className="text-xs font-bold text-slate-700 block">
-                Select Question Count:
+                {language === 'bn' ? 'প্রশ্নের সংখ্যা নির্বাচন করুন:' : 'Select Question Count:'}
               </label>
               <div className="grid grid-cols-3 gap-2">
                 {[10, 15, 25, 30].map((num) => (
@@ -462,7 +467,7 @@ export const QuizDiscoveryPage: React.FC = () => {
                         : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
                     }`}
                   >
-                    {num} Questions
+                    {num} {language === 'bn' ? 'টি প্রশ্ন' : 'Questions'}
                   </button>
                 ))}
                 <button
@@ -474,7 +479,9 @@ export const QuizDiscoveryPage: React.FC = () => {
                       : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
                   }`}
                 >
-                  All Questions ({selectedQuizForConfig.questions?.length || 0})
+                  {language === 'bn'
+                    ? `সব প্রশ্ন (${selectedQuizForConfig.questions?.length || 0}টি)`
+                    : `All Questions (${selectedQuizForConfig.questions?.length || 0})`}
                 </button>
               </div>
             </div>
@@ -482,7 +489,9 @@ export const QuizDiscoveryPage: React.FC = () => {
             <div className="p-3 bg-indigo-50/70 border border-indigo-100 rounded-xl text-xs text-indigo-900 flex items-start gap-2">
               <CheckCircle className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
               <span>
-                Your score and percentage will be calculated specifically out of the <strong>{customCountChoice}</strong> questions you answer.
+                {language === 'bn'
+                  ? <>আপনার স্কোর শুধুমাত্র আপনার নির্বাচিত <strong>{customCountChoice}</strong>টি প্রশ্নের ওপর ভিত্তি করে গণনা করা হবে।</>
+                  : <>Your score and percentage will be calculated specifically out of the <strong>{customCountChoice}</strong> questions you answer.</>}
               </span>
             </div>
 
@@ -492,14 +501,16 @@ export const QuizDiscoveryPage: React.FC = () => {
                 onClick={() => setSelectedQuizForConfig(null)}
                 className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-xs font-bold hover:bg-slate-50 transition"
               >
-                Cancel
+                {language === 'bn' ? 'বাতিল' : 'Cancel'}
               </button>
               <button
                 type="button"
                 onClick={handleStartWithConfig}
                 className="px-5 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 shadow-md transition"
               >
-                Start Quiz ({customCountChoice} Questions)
+                {language === 'bn'
+                  ? `কুইজ শুরু করুন (${customCountChoice}টি প্রশ্ন)`
+                  : `Start Quiz (${customCountChoice} Questions)`}
               </button>
             </div>
           </div>

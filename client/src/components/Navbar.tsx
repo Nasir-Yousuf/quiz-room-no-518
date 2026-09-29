@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
 import { useNotification } from '../context/NotificationContext.js';
+import { useLanguage } from '../context/LanguageContext.js';
+import { LanguageToggle } from './LanguageToggle.js';
 import {
   GraduationCap,
   Bell,
@@ -21,6 +23,7 @@ import {
 export const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotification();
+  const { t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -61,22 +64,22 @@ export const Navbar: React.FC = () => {
 
   const navLinks: NavItem[] = isTeacher
     ? [
-        { name: 'Dashboard', path: '/teacher/dashboard', icon: LayoutDashboard },
-        { name: 'My Quizzes', path: '/teacher/quizzes', icon: BookOpen },
-        { name: 'Question Bank', path: '/teacher/question-bank', icon: Layers },
-        { name: 'Classes', path: '/teacher/classes', icon: Users },
-        { name: 'Analytics', path: '/teacher/analytics', icon: BarChart3 },
+        { name: t('nav.dashboard', 'Dashboard'), path: '/teacher/dashboard', icon: LayoutDashboard },
+        { name: t('nav.myQuizzes', 'My Quizzes'), path: '/teacher/quizzes', icon: BookOpen },
+        { name: t('nav.questionBank', 'Question Bank'), path: '/teacher/question-bank', icon: Layers },
+        { name: t('nav.classes', 'Classes'), path: '/teacher/classes', icon: Users },
+        { name: t('nav.analytics', 'Analytics'), path: '/teacher/analytics', icon: BarChart3 },
       ]
     : isStudent
     ? [
-        { name: 'Dashboard', path: '/student/dashboard', icon: LayoutDashboard },
-        { name: 'Explore Quizzes', path: '/student/quizzes', icon: BookOpen },
-        { name: 'My Progress', path: '/student/progress', icon: BarChart3 },
-        { name: 'My Classes', path: '/student/classes', icon: Users },
+        { name: t('nav.dashboard', 'Dashboard'), path: '/student/dashboard', icon: LayoutDashboard },
+        { name: t('nav.exploreQuizzes', 'Explore Quizzes'), path: '/student/quizzes', icon: BookOpen },
+        { name: t('nav.myProgress', 'My Progress'), path: '/student/progress', icon: BarChart3 },
+        { name: t('nav.myClasses', 'My Classes'), path: '/student/classes', icon: Users },
       ]
     : [
-        { name: 'Home', path: '/', icon: LayoutDashboard },
-        { name: 'Explore Quizzes', path: '/student/quizzes', icon: BookOpen },
+        { name: t('nav.home', 'Home'), path: '/', icon: LayoutDashboard },
+        { name: t('nav.exploreQuizzes', 'Explore Quizzes'), path: '/student/quizzes', icon: BookOpen },
       ];
 
   return (
@@ -123,8 +126,11 @@ export const Navbar: React.FC = () => {
             )}
           </div>
 
-          {/* Right Header: Notifications & Auth/Profile */}
-          <div className="flex items-center gap-3">
+          {/* Right Header: Language Switcher, Notifications & Auth/Profile */}
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            {/* Global Language Switcher */}
+            <LanguageToggle variant="compact" />
+
             {user ? (
               <>
                 {/* Notifications Dropdown */}
@@ -132,7 +138,7 @@ export const Navbar: React.FC = () => {
                   <button
                     onClick={() => setNotifOpen(!notifOpen)}
                     className="relative p-2 rounded-xl text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition"
-                    title="Notifications"
+                    title={t('taking.navigation', 'Notifications')}
                   >
                     <Bell className="w-5 h-5" />
                     {unreadCount > 0 && (
@@ -205,7 +211,7 @@ export const Navbar: React.FC = () => {
                     <div className="hidden sm:block text-left">
                       <p className="text-xs font-bold text-slate-800 leading-tight">{user.name}</p>
                       <span className="text-[10px] font-semibold uppercase tracking-wider text-indigo-600">
-                        {user.role}
+                        {user.role === 'teacher' ? t('nav.roleTeacher', 'Educator') : t('nav.roleStudent', 'Student')}
                       </span>
                     </div>
                     <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
@@ -222,32 +228,32 @@ export const Navbar: React.FC = () => {
                         onClick={() => setProfileOpen(false)}
                         className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition"
                       >
-                        <UserIcon className="w-4 h-4" /> My Profile
+                        <UserIcon className="w-4 h-4" /> {t('nav.myProgress', 'My Profile')}
                       </Link>
                       <button
                         onClick={handleLogout}
                         className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-rose-600 hover:bg-rose-50 transition text-left"
                       >
-                        <LogOut className="w-4 h-4" /> Sign Out
+                        <LogOut className="w-4 h-4" /> {t('nav.logout', 'Sign Out')}
                       </button>
                     </div>
                   )}
                 </div>
               </>
             ) : (
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <Link
                   to="/login"
-                  className="px-4 py-2 text-sm font-semibold text-slate-700 hover:text-indigo-600 transition"
+                  className="px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-slate-700 hover:text-indigo-600 transition"
                 >
-                  Sign In
+                  {t('nav.signIn', 'Sign In')}
                 </Link>
                 <Link
                   to="/register"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 shadow-md shadow-indigo-500/20 transition-all hover:scale-[1.02]"
+                  className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs sm:text-sm font-semibold hover:bg-indigo-700 shadow-md shadow-indigo-500/20 transition-all hover:scale-[1.02]"
                 >
-                  <Sparkles className="w-4 h-4" />
-                  Get Started
+                  <Sparkles className="w-3.5 h-3.5" />
+                  {t('nav.getStarted', 'Get Started')}
                 </Link>
               </div>
             )}
@@ -267,7 +273,11 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-1.5">
+        <div className="md:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-2">
+          <div className="pb-2 border-b border-slate-100 flex items-center justify-between">
+            <span className="text-xs font-semibold text-slate-500">Language / ভাষা:</span>
+            <LanguageToggle variant="compact" />
+          </div>
           {navLinks.map((link) => (
             <Link
               key={link.path}
@@ -287,7 +297,7 @@ export const Navbar: React.FC = () => {
               }}
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-rose-600 hover:bg-rose-50"
             >
-              <LogOut className="w-4 h-4" /> Sign Out
+              <LogOut className="w-4 h-4" /> {t('nav.logout', 'Sign Out')}
             </button>
           ) : (
             <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
@@ -296,14 +306,14 @@ export const Navbar: React.FC = () => {
                 onClick={() => setMobileMenuOpen(false)}
                 className="w-full text-center py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700"
               >
-                Sign In
+                {t('nav.signIn', 'Sign In')}
               </Link>
               <Link
                 to="/register"
                 onClick={() => setMobileMenuOpen(false)}
                 className="w-full text-center py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-semibold shadow"
               >
-                Get Started
+                {t('nav.getStarted', 'Get Started')}
               </Link>
             </div>
           )}

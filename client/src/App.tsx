@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.js';
 import { NotificationProvider } from './context/NotificationContext.js';
+import { LanguageProvider } from './context/LanguageContext.js';
 import { Navbar } from './components/Navbar.js';
 import { Footer } from './components/Footer.js';
 import { ToastContainer } from './components/Toast.js';
@@ -37,9 +38,10 @@ export const App: React.FC = () => {
     <BrowserRouter>
       <AuthProvider>
         <NotificationProvider>
-          <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
-            <Navbar />
-            <main className="flex-1">
+          <LanguageProvider>
+            <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
+              <Navbar />
+              <main className="flex-1">
               <Routes>
                 {/* Public & General Routes */}
                 <Route path="/" element={<LandingPage />} />
@@ -171,9 +173,10 @@ export const App: React.FC = () => {
             <Footer />
             <ToastContainer />
           </div>
-        </NotificationProvider>
-      </AuthProvider>
-    </BrowserRouter>
+        </LanguageProvider>
+      </NotificationProvider>
+    </AuthProvider>
+  </BrowserRouter>
   );
 };
 

@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { api } from '../../api/client.js';
 import { IQuiz, IQuestion } from '../../types/index.js';
 import { useNotification } from '../../context/NotificationContext.js';
+import { useLanguage } from '../../context/LanguageContext.js';
 import { Modal } from '../../components/Modal.js';
 import {
   Clock,
@@ -24,6 +25,7 @@ export const QuizTakingPage: React.FC = () => {
 
   const navigate = useNavigate();
   const { showToast } = useNotification();
+  const { t, translateQuiz, language } = useLanguage();
 
   // Stable refs for callbacks that should never cause effect re-runs
   const showToastRef = useRef(showToast);
@@ -198,18 +200,25 @@ export const QuizTakingPage: React.FC = () => {
     }
   };
 
+  const localizedQuiz = useMemo(() => {
+    return quiz ? translateQuiz(quiz) : null;
+  }, [quiz, translateQuiz]);
+
   if (loading || !quiz) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <div className="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-xs font-semibold text-slate-500">Preparing Quiz Environment...</p>
+          <p className="text-xs font-semibold text-slate-500">
+            {t('taking.preparing', 'Preparing Quiz Environment...')}
+          </p>
         </div>
       </div>
     );
   }
 
-  const currentQuestion: IQuestion = quiz.questions[currentIndex];
+  const originalQuestion: IQuestion = quiz.questions[currentIndex];
+  const currentQuestion: IQuestion = localizedQuiz ? localizedQuiz.questions[currentIndex] : originalQuestion;
   const totalQuestions = quiz.questions.length;
   const answeredCount = Object.keys(answers).filter((k) => answers[Number(k)]).length;
   const unansweredCount = totalQuestions - answeredCount;
@@ -230,10 +239,12 @@ export const QuizTakingPage: React.FC = () => {
               {quiz.subject}
             </span>
             <span className="text-[11px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
-              {quiz.questions?.length} Questions
+              {quiz.questions?.length} {t('taking.questions', 'Questions')}
             </span>
           </div>
-          <h2 className="text-base sm:text-lg font-bold text-slate-900 mt-1">{quiz.title}</h2>
+          <h2 className="text-base sm:text-lg font-bold text-slate-900 mt-1">
+            {localizedQuiz?.title || quiz.title}
+          </h2>
         </div>
 
         <div className="flex items-center gap-3">
@@ -263,7 +274,7 @@ export const QuizTakingPage: React.FC = () => {
           {/* Tab switches indicator */}
           {tabSwitches > 0 && (
             <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 text-[11px] font-semibold">
-              <AlertTriangle className="w-3.5 h-3.5" /> {tabSwitches} Switch{tabSwitches > 1 ? 'es' : ''}
+              <AlertTriangle className="w-3.5 h-3.5" /> {tabSwitches} {language === 'bn' ? 'বার ট্যাব সুইচ' : `Switch${tabSwitches > 1 ? 'es' : ''}`}
             </span>
           )}
         </div>
@@ -273,9 +284,9 @@ export const QuizTakingPage: React.FC = () => {
       <div className="space-y-1.5">
         <div className="flex items-center justify-between text-xs text-slate-500 font-semibold">
           <span>
-            Question {currentIndex + 1} of {totalQuestions}
+            {t('taking.question', 'Question')} {currentIndex + 1} {t('taking.of', 'of')} {totalQuestions}
           </span>
-          <span>{Math.round(((currentIndex + 1) / totalQuestions) * 100)}% Completed</span>
+          <span>{Math.round(((currentIndex + 1) / totalQuestions) * 100)}% {t('taking.completed', 'Completed')}</span>
         </div>
         <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
           <div
@@ -290,7 +301,9 @@ export const QuizTakingPage: React.FC = () => {
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-2">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              {currentQuestion.type === 'true-false' ? 'True / False Question' : 'Multiple Choice'}
+              {currentQuestion.type === 'true-false'
+                ? (language === 'bn' ? 'সত্য / মিথ্যা প্রশ্ন' : 'True / False Question')
+                : (language === 'bn' ? 'বহুনির্বাচনী প্রশ্ন' : 'Multiple Choice')}
             </span>
             <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 leading-snug">
               {currentQuestion.questionText}
@@ -309,7 +322,7 @@ export const QuizTakingPage: React.FC = () => {
           >
             <Flag className="w-4 h-4" />
             <span className="hidden sm:inline">
-              {flagged[currentIndex] ? 'Flagged' : 'Flag'}
+              {flagged[currentIndex] ? t('taking.flagged', 'Flagged') : t('taking.flag', 'Flag')}
             </span>
           </button>
         </div>
@@ -325,14 +338,15 @@ export const QuizTakingPage: React.FC = () => {
         <div className="space-y-3 pt-2">
           {currentQuestion.options.map((option, optIdx) => {
             const letter = String.fromCharCode(65 + optIdx);
-            const isSelected = answers[currentIndex] === option;
+            const originalOption = originalQuestion.options[optIdx] ?? option;
+            const isSelected = answers[currentIndex] === originalOption;
 
             return (
               <button
                 key={optIdx}
                 type="button"
                 onClick={() =>
-                  setAnswers((prev) => ({ ...prev, [currentIndex]: option }))
+                  setAnswers((prev) => ({ ...prev, [currentIndex]: originalOption }))
                 }
                 className={`w-full p-4 rounded-2xl border text-left transition-all flex items-center gap-3.5 group ${
                   isSelected
@@ -363,7 +377,7 @@ export const QuizTakingPage: React.FC = () => {
             disabled={currentIndex === 0}
             className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 text-xs font-bold hover:bg-slate-50 transition disabled:opacity-30 disabled:pointer-events-none"
           >
-            <ChevronLeft className="w-4 h-4" /> Previous
+            <ChevronLeft className="w-4 h-4" /> {t('taking.previous', 'Previous')}
           </button>
 
           {currentIndex === totalQuestions - 1 ? (
@@ -371,14 +385,14 @@ export const QuizTakingPage: React.FC = () => {
               onClick={() => setConfirmModalOpen(true)}
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 shadow-md shadow-emerald-600/20 transition hover:scale-105"
             >
-              <CheckCircle2 className="w-4 h-4" /> Submit Quiz
+              <CheckCircle2 className="w-4 h-4" /> {t('taking.submitQuiz', 'Submit Quiz')}
             </button>
           ) : (
             <button
               onClick={() => setCurrentIndex((prev) => Math.min(totalQuestions - 1, prev + 1))}
               className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 shadow-md shadow-indigo-600/20 transition"
             >
-              Next <ChevronRight className="w-4 h-4" />
+              {t('taking.next', 'Next')} <ChevronRight className="w-4 h-4" />
             </button>
           )}
         </div>
@@ -387,13 +401,15 @@ export const QuizTakingPage: React.FC = () => {
       {/* Question Navigation Drawer / Grid */}
       <div className="bg-white rounded-2xl border border-slate-200 p-5 space-y-3 shadow-xs">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-bold text-slate-800">Question Navigation</span>
+          <span className="text-xs font-bold text-slate-800">
+            {t('taking.navigation', 'Question Navigation')}
+          </span>
           <div className="flex items-center gap-3 text-[11px] text-slate-500">
             <span className="flex items-center gap-1">
-              <span className="w-2.5 h-2.5 rounded-full bg-indigo-600" /> Answered ({answeredCount})
+              <span className="w-2.5 h-2.5 rounded-full bg-indigo-600" /> {t('taking.answered', 'Answered')} ({answeredCount})
             </span>
             <span className="flex items-center gap-1">
-              <span className="w-2.5 h-2.5 rounded-full bg-slate-200" /> Unanswered ({unansweredCount})
+              <span className="w-2.5 h-2.5 rounded-full bg-slate-200" /> {t('taking.unanswered', 'Unanswered')} ({unansweredCount})
             </span>
           </div>
         </div>
@@ -428,7 +444,7 @@ export const QuizTakingPage: React.FC = () => {
       <Modal
         isOpen={confirmModalOpen}
         onClose={() => setConfirmModalOpen(false)}
-        title="Ready to Submit Quiz?"
+        title={t('taking.modalTitle', 'Ready to Submit Quiz?')}
         maxWidth="md"
       >
         <div className="space-y-4">
@@ -436,15 +452,19 @@ export const QuizTakingPage: React.FC = () => {
             <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-medium flex items-start gap-2.5">
               <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
               <div>
-                <p className="font-bold">You have {unansweredCount} unanswered question(s)!</p>
+                <p className="font-bold">
+                  {language === 'bn'
+                    ? `আপনার ${unansweredCount}টি উত্তর না দেওয়া প্রশ্ন রয়েছে!`
+                    : `You have ${unansweredCount} unanswered question(s)!`}
+                </p>
                 <p className="text-[11px] text-amber-700 mt-0.5">
-                  Unanswered questions will be scored as 0 points.
+                  {t('taking.modalWarningSub', 'Unanswered questions will be scored as 0 points.')}
                 </p>
               </div>
             </div>
           ) : (
             <p className="text-xs text-slate-600">
-              Great work! You have answered all {totalQuestions} questions. Are you ready to submit your responses for automatic grading?
+              {t('taking.modalSuccess', `Great work! You have answered all ${totalQuestions} questions. Ready to submit for instant grading?`)}
             </p>
           )}
 
@@ -453,7 +473,7 @@ export const QuizTakingPage: React.FC = () => {
               onClick={() => setConfirmModalOpen(false)}
               className="px-4 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition"
             >
-              Continue Quiz
+              {t('taking.continue', 'Continue Quiz')}
             </button>
             <button
               onClick={() => {
@@ -463,7 +483,9 @@ export const QuizTakingPage: React.FC = () => {
               disabled={submitting}
               className="px-5 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 shadow-sm transition disabled:opacity-50"
             >
-              {submitting ? 'Submitting...' : 'Confirm Submission'}
+              {submitting
+                ? (language === 'bn' ? 'জমা দেওয়া হচ্ছে...' : 'Submitting...')
+                : t('taking.confirmSubmit', 'Confirm Submission')}
             </button>
           </div>
         </div>

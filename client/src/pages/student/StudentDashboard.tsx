@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.js';
+import { useLanguage } from '../../context/LanguageContext.js';
 import { api } from '../../api/client.js';
 import { StatsCard } from '../../components/StatsCard.js';
 import { SubjectBadge } from '../../components/Badge.js';
@@ -18,6 +19,7 @@ import {
 
 export const StudentDashboard: React.FC = () => {
   const { user } = useAuth();
+  const { t, language } = useLanguage();
   const [stats, setStats] = useState<any>(null);
   const [assignments, setAssignments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -54,13 +56,13 @@ export const StudentDashboard: React.FC = () => {
         <div className="space-y-1.5">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-indigo-200 text-xs font-semibold backdrop-blur-xs">
             <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-            <span>Student Learning Hub</span>
+            <span>{t('dashboard.badge', 'Student Learning Hub')}</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-            Welcome back, {user?.name}! 👋
+            {t('dashboard.welcome', 'Welcome back')}, {user?.name}! 👋
           </h1>
           <p className="text-xs sm:text-sm text-indigo-200 max-w-xl">
-            Self-paced practice mode active. Test yourself freely across React, Next.js, TypeScript, Python, HTML, CSS, JavaScript, and Node.js.
+            {t('dashboard.subtitle', 'Self-paced practice mode active. Test yourself freely across React, Next.js, TypeScript, Python, HTML, CSS, JavaScript, and Node.js.')}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
@@ -69,13 +71,13 @@ export const StudentDashboard: React.FC = () => {
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-indigo-900 text-xs font-bold hover:bg-indigo-50 shadow-md transition hover:scale-105"
           >
             <BookOpen className="w-4 h-4 text-indigo-600" />
-            Explore All Quizzes
+            {t('dashboard.browseBtn', 'Explore All Quizzes')}
           </Link>
           <Link
             to="/student/classes"
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 text-white text-xs font-bold hover:bg-white/20 transition border border-white/20"
           >
-            Join a Class
+            {t('dashboard.joinClassBtn', 'Join a Class')}
           </Link>
         </div>
       </div>
@@ -88,14 +90,14 @@ export const StudentDashboard: React.FC = () => {
               ⚡
             </span>
             <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-800">
-              Quick 15-Question Practice Sprints (No Teacher Needed)
+              {t('dashboard.quickSprintsTitle', 'Quick 15-Question Practice Sprints (No Teacher Needed)')}
             </h3>
           </div>
           <Link
             to="/student/quizzes"
             className="text-xs font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-1"
           >
-            Customize Question Count (15, 30, 50, 100 Qs) <ArrowRight className="w-3.5 h-3.5" />
+            {t('dashboard.customizeCountLink', 'Customize Question Count (15, 30, 50, 100 Qs)')} <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
@@ -115,7 +117,7 @@ export const StudentDashboard: React.FC = () => {
               to={`/student/quizzes?subject=${topic.name}`}
               className={`px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 transition shrink-0 ${topic.color}`}
             >
-              {topic.name} Sprint »
+              {topic.name} {language === 'bn' ? 'স্প্রিন্ট »' : 'Sprint »'}
             </Link>
           ))}
         </div>
@@ -124,32 +126,32 @@ export const StudentDashboard: React.FC = () => {
       {/* Metric Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatsCard
-          label="Total Quizzes Taken"
+          label={t('dashboard.totalQuizzes', 'Total Quizzes Taken')}
           value={stats?.totalQuizzes ?? 0}
           icon={<BookOpen className="w-6 h-6" />}
           colorScheme="indigo"
-          subtitle="Assessments completed"
+          subtitle={language === 'bn' ? 'সম্পন্ন মূল্যায়ন' : 'Assessments completed'}
         />
         <StatsCard
-          label="Average Score"
+          label={t('dashboard.avgScore', 'Average Score')}
           value={`${stats?.avgScore ?? 0}%`}
           icon={<TrendingUp className="w-6 h-6" />}
           colorScheme="emerald"
-          subtitle="Overall performance"
+          subtitle={language === 'bn' ? 'সামগ্রিক ফলাফল' : 'Overall performance'}
         />
         <StatsCard
-          label="Highest Score"
+          label={t('dashboard.highestScore', 'Highest Score')}
           value={`${stats?.highestScore ?? 0}%`}
           icon={<Trophy className="w-6 h-6" />}
           colorScheme="amber"
-          subtitle="Personal best"
+          subtitle={language === 'bn' ? 'ব্যক্তিগত সেরা' : 'Personal best'}
         />
         <StatsCard
-          label="Pending Assignments"
+          label={t('dashboard.pendingAssignments', 'Pending Assignments')}
           value={assignments.length}
           icon={<Clock className="w-6 h-6" />}
           colorScheme="purple"
-          subtitle="Class quizzes due"
+          subtitle={language === 'bn' ? 'ক্লাস টেস্ট বাকি' : 'Class quizzes due'}
         />
       </div>
 
