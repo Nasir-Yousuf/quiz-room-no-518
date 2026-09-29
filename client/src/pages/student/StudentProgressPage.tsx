@@ -54,7 +54,7 @@ export const StudentProgressPage: React.FC = () => {
       </div>
 
       {/* Top Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
         <StatsCard
           label="Total Quizzes Taken"
           value={stats?.totalQuizzes ?? 0}
@@ -79,9 +79,9 @@ export const StudentProgressPage: React.FC = () => {
       </div>
 
       {/* Progress Over Time Visual Chart (Requirement 10) */}
-      <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 space-y-6 shadow-xs">
+      <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-4 sm:p-8 space-y-5 sm:space-y-6 shadow-xs">
         <div>
-          <h3 className="font-bold text-slate-900 text-lg">Performance Over Time</h3>
+          <h3 className="font-bold text-slate-900 text-base sm:text-lg">Performance Over Time</h3>
           <p className="text-xs text-slate-500">
             Chronological progression of scores across recent quiz attempts
           </p>
@@ -90,7 +90,7 @@ export const StudentProgressPage: React.FC = () => {
         {stats?.progressOverTime && stats.progressOverTime.length > 0 ? (
           <div className="space-y-4">
             {/* Custom Interactive SVG / Bar Trend Visualization */}
-            <div className="h-48 sm:h-56 flex items-end gap-3 sm:gap-6 pt-6 pb-2 border-b border-slate-100 overflow-x-auto">
+            <div className="h-44 sm:h-56 flex items-end gap-3 sm:gap-6 pt-6 pb-2 border-b border-slate-100 overflow-x-auto no-scrollbar">
               {stats.progressOverTime.map((item: any, idx: number) => {
                 const heightPercent = Math.max(15, Math.min(100, item.score));
                 const isPassed = item.score >= 70;
@@ -100,7 +100,7 @@ export const StudentProgressPage: React.FC = () => {
                     <span className="text-[11px] font-extrabold text-slate-700 opacity-0 group-hover:opacity-100 transition-opacity">
                       {item.score}%
                     </span>
-                    <div className="w-full bg-slate-100 h-36 rounded-xl flex items-end p-1 overflow-hidden">
+                    <div className="w-full bg-slate-100 h-32 sm:h-36 rounded-xl flex items-end p-1 overflow-hidden">
                       <div
                         className={`w-full rounded-lg transition-all duration-700 ${
                           isPassed
@@ -120,10 +120,10 @@ export const StudentProgressPage: React.FC = () => {
 
             <div className="flex items-center justify-between text-xs text-slate-500 pt-2">
               <span className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-emerald-500" /> Passed (≥ 70%)
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> Passed (≥ 70%)
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-amber-500" /> In Progress (&lt; 70%)
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-500" /> In Progress (&lt; 70%)
               </span>
             </div>
           </div>
@@ -135,15 +135,15 @@ export const StudentProgressPage: React.FC = () => {
       </div>
 
       {/* Attempt History List with Subject Filter */}
-      <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 space-y-6 shadow-xs">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-4 sm:p-8 space-y-5 sm:space-y-6 shadow-xs">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
           <div>
-            <h3 className="font-bold text-slate-900 text-lg">Assessment History</h3>
+            <h3 className="font-bold text-slate-900 text-base sm:text-lg">Assessment History</h3>
             <p className="text-xs text-slate-500">Full log of completed quiz attempts and scores</p>
           </div>
 
           {/* Filter tabs */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 no-scrollbar max-w-full">
             <Filter className="w-4 h-4 text-slate-400 shrink-0" />
             {[
               'All',
@@ -172,8 +172,8 @@ export const StudentProgressPage: React.FC = () => {
         </div>
 
         {attempts.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+          <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+            <table className="w-full text-left text-xs min-w-[560px]">
               <thead className="text-[11px] font-bold uppercase text-slate-400 border-b border-slate-100">
                 <tr>
                   <th className="pb-3">Quiz Title</th>

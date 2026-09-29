@@ -52,30 +52,30 @@ export const StudentDashboard: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Welcome Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-gradient-to-r from-indigo-900 via-indigo-800 to-indigo-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl shadow-indigo-900/10">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 bg-gradient-to-r from-indigo-900 via-indigo-800 to-indigo-900 rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-xl shadow-indigo-900/10">
         <div className="space-y-1.5">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-indigo-200 text-xs font-semibold backdrop-blur-xs">
             <Sparkles className="w-3.5 h-3.5 text-amber-300" />
             <span>{t('dashboard.badge', 'Student Learning Hub')}</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+          <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight">
             {t('dashboard.welcome', 'Welcome back')}, {user?.name}! 👋
           </h1>
           <p className="text-xs sm:text-sm text-indigo-200 max-w-xl">
             {t('dashboard.subtitle', 'Self-paced practice mode active. Test yourself freely across React, Next.js, TypeScript, Python, HTML, CSS, JavaScript, and Node.js.')}
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full sm:w-auto shrink-0">
           <Link
             to="/student/quizzes"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-indigo-900 text-xs font-bold hover:bg-indigo-50 shadow-md transition hover:scale-105"
+            className="inline-flex items-center justify-center gap-2 px-5 py-3 sm:py-2.5 rounded-xl bg-white text-indigo-900 text-xs font-bold hover:bg-indigo-50 shadow-md transition hover:scale-105 text-center"
           >
             <BookOpen className="w-4 h-4 text-indigo-600" />
             {t('dashboard.browseBtn', 'Explore All Quizzes')}
           </Link>
           <Link
             to="/student/classes"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 text-white text-xs font-bold hover:bg-white/20 transition border border-white/20"
+            className="inline-flex items-center justify-center gap-2 px-4 py-3 sm:py-2.5 rounded-xl bg-white/10 text-white text-xs font-bold hover:bg-white/20 transition border border-white/20 text-center"
           >
             {t('dashboard.joinClassBtn', 'Join a Class')}
           </Link>
@@ -83,10 +83,10 @@ export const StudentDashboard: React.FC = () => {
       </div>
 
       {/* Quick Self-Study Practice Topic Bar */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-xs">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+      <div className="bg-white rounded-2xl border border-slate-200/90 p-3.5 sm:p-4 shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 mb-3">
           <div className="flex items-center gap-2">
-            <span className="w-6 h-6 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs">
+            <span className="w-6 h-6 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs shrink-0">
               ⚡
             </span>
             <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-800">
@@ -101,7 +101,7 @@ export const StudentDashboard: React.FC = () => {
           </Link>
         </div>
 
-        <div className="flex items-center gap-2 overflow-x-auto pb-1">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1.5 no-scrollbar">
           {[
             { name: 'React', color: 'hover:border-cyan-400 hover:bg-cyan-50/50' },
             { name: 'Next.js', color: 'hover:border-slate-400 hover:bg-slate-50' },
@@ -124,7 +124,7 @@ export const StudentDashboard: React.FC = () => {
       </div>
 
       {/* Metric Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <StatsCard
           label={t('dashboard.totalQuizzes', 'Total Quizzes Taken')}
           value={stats?.totalQuizzes ?? 0}
@@ -303,7 +303,7 @@ export const StudentDashboard: React.FC = () => {
       </div>
 
       {/* Recent Quiz Activity Table */}
-      <div className="bg-white rounded-3xl border border-slate-200 p-6 space-y-4 shadow-xs">
+      <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200 p-4 sm:p-6 space-y-4 shadow-xs">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="font-bold text-slate-900 text-base">Recent Attempts</h3>
@@ -311,15 +311,15 @@ export const StudentDashboard: React.FC = () => {
           </div>
           <Link
             to="/student/progress"
-            className="text-xs font-bold text-indigo-600 hover:text-indigo-700"
+            className="text-xs font-bold text-indigo-600 hover:text-indigo-700 shrink-0"
           >
             View All Attempts
           </Link>
         </div>
 
         {stats?.recentActivity && stats.recentActivity.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+          <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+            <table className="w-full text-left text-xs min-w-[560px]">
               <thead className="text-[11px] font-bold uppercase text-slate-400 border-b border-slate-100">
                 <tr>
                   <th className="pb-3">Quiz Title</th>

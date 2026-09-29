@@ -49,8 +49,8 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[85vh] flex items-center justify-center px-4 py-12">
-      <div className="max-w-md w-full space-y-6 bg-white p-8 sm:p-10 rounded-3xl border border-slate-200/80 shadow-xl shadow-slate-200/40">
+    <div className="min-h-[85vh] flex items-center justify-center px-4 py-6 sm:py-12">
+      <div className="max-w-md w-full space-y-6 bg-white p-5 sm:p-10 rounded-3xl border border-slate-200/80 shadow-xl shadow-slate-200/40">
         <div className="text-center space-y-2">
           <div className="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center mx-auto shadow-md shadow-indigo-500/20">
             <GraduationCap className="w-6 h-6" />
@@ -74,7 +74,7 @@ export const RegisterPage: React.FC = () => {
           <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
             Select Your Role
           </label>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
             <button
               type="button"
               onClick={() => setRole('student')}

@@ -23,6 +23,22 @@ export const SubjectBadge: React.FC<{ subject: string; className?: string }> = (
     color = 'bg-emerald-50 text-emerald-800 border-emerald-200';
   } else if (sub === 'node.js') {
     color = 'bg-green-50 text-green-700 border-green-200';
+  } else if (sub.includes('bangla')) {
+    color = 'bg-rose-50 text-rose-700 border-rose-200';
+  } else if (sub.includes('english')) {
+    color = 'bg-indigo-50 text-indigo-700 border-indigo-200';
+  } else if (sub.includes('math')) {
+    color = 'bg-violet-50 text-violet-700 border-violet-200';
+  } else if (sub.includes('knowledge') || sub === 'gk') {
+    color = 'bg-teal-50 text-teal-700 border-teal-200';
+  } else if (sub.includes('science') || sub.includes('ict')) {
+    color = 'bg-cyan-50 text-cyan-800 border-cyan-200';
+  } else if (sub.includes('bank')) {
+    color = 'bg-emerald-50 text-emerald-800 border-emerald-300';
+  } else if (sub.includes('teacher') || sub.includes('ntrca')) {
+    color = 'bg-amber-50 text-amber-800 border-amber-300';
+  } else if (sub.includes('bcs') || sub.includes('govt')) {
+    color = 'bg-purple-50 text-purple-800 border-purple-300';
   }
 
   return (

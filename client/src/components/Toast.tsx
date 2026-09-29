@@ -8,7 +8,7 @@ export const ToastContainer: React.FC = () => {
   if (toasts.length === 0) return null;
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 max-w-sm w-full pointer-events-none">
+    <div className="fixed bottom-4 sm:bottom-5 right-4 sm:right-5 left-4 sm:left-auto z-50 flex flex-col gap-2.5 max-w-sm sm:w-full pointer-events-none">
       {toasts.map((toast) => {
         let bgStyle = 'bg-white border-slate-200 text-slate-800';
         let icon = <Info className="w-5 h-5 text-indigo-500" />;

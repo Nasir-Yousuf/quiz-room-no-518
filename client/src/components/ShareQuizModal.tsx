@@ -73,8 +73,8 @@ export const ShareQuizModal: React.FC<ShareQuizModalProps> = ({
 
         {/* QR Code */}
         {qrDataUrl && (
-          <div className="flex flex-col items-center justify-center p-4 bg-slate-50 border border-slate-200 rounded-2xl w-fit mx-auto shadow-inner">
-            <img src={qrDataUrl} alt="Quiz QR Code" className="w-44 h-44 rounded-lg" />
+          <div className="flex flex-col items-center justify-center p-3 sm:p-4 bg-slate-50 border border-slate-200 rounded-2xl w-fit mx-auto shadow-inner">
+            <img src={qrDataUrl} alt="Quiz QR Code" className="w-36 h-36 sm:w-44 sm:h-44 rounded-lg" />
             <span className="text-[11px] font-mono font-medium text-slate-500 mt-2 flex items-center gap-1">
               <QrCode className="w-3.5 h-3.5" /> Scan to open quiz
             </span>
@@ -82,7 +82,7 @@ export const ShareQuizModal: React.FC<ShareQuizModalProps> = ({
         )}
 
         {/* Link input with copy button */}
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
           <input
             type="text"
             readOnly
@@ -91,7 +91,7 @@ export const ShareQuizModal: React.FC<ShareQuizModalProps> = ({
           />
           <button
             onClick={handleCopy}
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-700 transition shadow-sm shrink-0"
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-700 transition shadow-sm shrink-0"
           >
             {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
             {copied ? 'Copied' : 'Copy'}
@@ -99,11 +99,11 @@ export const ShareQuizModal: React.FC<ShareQuizModalProps> = ({
         </div>
 
         {/* Action buttons */}
-        <div className="flex gap-2 justify-center pt-2">
+        <div className="flex flex-col sm:flex-row gap-2 justify-center pt-2">
           {typeof navigator !== 'undefined' && 'share' in navigator && (
             <button
               onClick={handleNativeShare}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-medium transition"
+              className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-medium transition"
             >
               <Share2 className="w-3.5 h-3.5" /> Share via App
             </button>
@@ -112,7 +112,7 @@ export const ShareQuizModal: React.FC<ShareQuizModalProps> = ({
             href={shareUrl}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-medium transition"
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-medium transition"
           >
             <ExternalLink className="w-3.5 h-3.5" /> Preview Link
           </a>

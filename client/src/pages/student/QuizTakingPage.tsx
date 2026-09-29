@@ -230,59 +230,66 @@ export const QuizTakingPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+    <div className="max-w-5xl mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
       {/* Top Session Bar */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">
-              {quiz.subject}
-            </span>
-            <span className="text-[11px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
-              {quiz.questions?.length} {t('taking.questions', 'Questions')}
-            </span>
-          </div>
-          <h2 className="text-base sm:text-lg font-bold text-slate-900 mt-1">
-            {localizedQuiz?.title || quiz.title}
-          </h2>
-        </div>
-
-        <div className="flex items-center gap-3">
-          {/* Live Timer if configured */}
-          {secondsRemaining !== null && (
-            <div
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border font-mono font-bold text-xs ${
-                secondsRemaining < 120
-                  ? 'bg-rose-50 border-rose-200 text-rose-600 animate-pulse'
-                  : 'bg-slate-50 border-slate-200 text-slate-700'
-              }`}
-            >
-              <Clock className="w-4 h-4" />
-              <span>{formatTimer(secondsRemaining)}</span>
+      <div className="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-4 shadow-xs space-y-2">
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">
+                {quiz.subject}
+              </span>
+              <span className="text-[10px] sm:text-[11px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+                {quiz.questions?.length} {t('taking.questions', 'Questions')}
+              </span>
             </div>
-          )}
+            <h2 className="text-sm sm:text-base font-bold text-slate-900 mt-1 truncate">
+              {localizedQuiz?.title || quiz.title}
+            </h2>
+          </div>
 
-          {/* Fullscreen Button */}
-          <button
-            onClick={toggleFullscreen}
-            className="p-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 transition"
-            title="Toggle Fullscreen"
-          >
-            {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
-          </button>
+          <div className="flex items-center gap-2 shrink-0">
+            {/* Live Timer if configured */}
+            {secondsRemaining !== null && (
+              <div
+                className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border font-mono font-bold text-xs sm:text-sm ${
+                  secondsRemaining < 120
+                    ? 'bg-rose-50 border-rose-200 text-rose-600 animate-pulse'
+                    : 'bg-slate-50 border-slate-200 text-slate-700'
+                }`}
+              >
+                <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-indigo-600" />
+                <span>{formatTimer(secondsRemaining)}</span>
+              </div>
+            )}
 
-          {/* Tab switches indicator */}
-          {tabSwitches > 0 && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 text-[11px] font-semibold">
-              <AlertTriangle className="w-3.5 h-3.5" /> {tabSwitches} {language === 'bn' ? 'বার ট্যাব সুইচ' : `Switch${tabSwitches > 1 ? 'es' : ''}`}
-            </span>
-          )}
+            {/* Fullscreen Button */}
+            <button
+              onClick={toggleFullscreen}
+              className="p-1.5 sm:p-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 transition"
+              title="Toggle Fullscreen"
+              aria-label="Toggle Fullscreen"
+            >
+              {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+            </button>
+          </div>
         </div>
+
+        {/* Tab switches indicator banner if any occurred */}
+        {tabSwitches > 0 && (
+          <div className="pt-1 border-t border-slate-100 flex items-center justify-between text-[11px]">
+            <span className="inline-flex items-center gap-1 font-semibold text-amber-700">
+              <AlertTriangle className="w-3.5 h-3.5" />
+              {tabSwitches} {language === 'bn' ? 'বার ট্যাব সুইচ শনাক্ত' : `Tab Switch${tabSwitches > 1 ? 'es' : ''} Logged`}
+            </span>
+            <span className="text-slate-400 text-[10px]">Anti-Cheat Active</span>
+          </div>
+        )}
       </div>
 
       {/* Progress Bar & Counter */}
       <div className="space-y-1.5">
-        <div className="flex items-center justify-between text-xs text-slate-500 font-semibold">
+        <div className="flex items-center justify-between text-xs text-slate-500 font-semibold px-0.5">
           <span>
             {t('taking.question', 'Question')} {currentIndex + 1} {t('taking.of', 'of')} {totalQuestions}
           </span>
@@ -297,15 +304,15 @@ export const QuizTakingPage: React.FC = () => {
       </div>
 
       {/* Question Card */}
-      <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-10 shadow-sm space-y-6">
-        <div className="flex items-start justify-between gap-4">
-          <div className="space-y-2">
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+      <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-4 sm:p-8 sm:p-10 shadow-sm space-y-5 sm:space-y-6">
+        <div className="flex items-start justify-between gap-3">
+          <div className="space-y-1.5">
+            <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider">
               {currentQuestion.type === 'true-false'
                 ? (language === 'bn' ? 'সত্য / মিথ্যা প্রশ্ন' : 'True / False Question')
                 : (language === 'bn' ? 'বহুনির্বাচনী প্রশ্ন' : 'Multiple Choice')}
             </span>
-            <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 leading-snug">
+            <h3 className="text-base sm:text-xl font-extrabold text-slate-900 leading-snug">
               {currentQuestion.questionText}
             </h3>
           </div>
@@ -313,12 +320,13 @@ export const QuizTakingPage: React.FC = () => {
             onClick={() =>
               setFlagged((prev) => ({ ...prev, [currentIndex]: !prev[currentIndex] }))
             }
-            className={`p-2 rounded-xl border text-xs font-semibold transition flex items-center gap-1.5 shrink-0 ${
+            className={`p-2 sm:px-3 sm:py-2 rounded-xl border text-xs font-semibold transition flex items-center gap-1.5 shrink-0 ${
               flagged[currentIndex]
                 ? 'bg-amber-50 border-amber-300 text-amber-700'
                 : 'border-slate-200 text-slate-500 hover:bg-slate-50'
             }`}
             title="Flag question for review"
+            aria-label="Flag question"
           >
             <Flag className="w-4 h-4" />
             <span className="hidden sm:inline">
@@ -329,13 +337,13 @@ export const QuizTakingPage: React.FC = () => {
 
         {/* Code Snippet Box (if provided) */}
         {currentQuestion.codeSnippet && (
-          <div className="p-4 rounded-2xl bg-slate-900 text-slate-100 font-mono text-xs overflow-x-auto border border-slate-800 shadow-inner">
-            <pre className="leading-relaxed">{currentQuestion.codeSnippet}</pre>
+          <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-slate-900 text-slate-100 font-mono text-xs overflow-x-auto border border-slate-800 shadow-inner max-h-60">
+            <pre className="leading-relaxed whitespace-pre">{currentQuestion.codeSnippet}</pre>
           </div>
         )}
 
         {/* Answer Options */}
-        <div className="space-y-3 pt-2">
+        <div className="space-y-2.5 sm:space-y-3 pt-1">
           {currentQuestion.options.map((option, optIdx) => {
             const letter = String.fromCharCode(65 + optIdx);
             const originalOption = originalQuestion.options[optIdx] ?? option;
@@ -348,14 +356,14 @@ export const QuizTakingPage: React.FC = () => {
                 onClick={() =>
                   setAnswers((prev) => ({ ...prev, [currentIndex]: originalOption }))
                 }
-                className={`w-full p-4 rounded-2xl border text-left transition-all flex items-center gap-3.5 group ${
+                className={`w-full min-h-[52px] p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border text-left transition-all flex items-center gap-3 sm:gap-3.5 group active:scale-[0.99] ${
                   isSelected
                     ? 'border-indigo-600 bg-indigo-50/70 ring-2 ring-indigo-600/20 text-indigo-950 font-bold shadow-xs'
                     : 'border-slate-200 hover:border-slate-300 bg-slate-50/50 text-slate-700 hover:bg-slate-50'
                 }`}
               >
                 <span
-                  className={`w-7 h-7 rounded-xl flex items-center justify-center text-xs font-bold shrink-0 transition-colors ${
+                  className={`w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center text-xs font-bold shrink-0 transition-colors ${
                     isSelected
                       ? 'bg-indigo-600 text-white shadow-xs'
                       : 'bg-white border border-slate-200 text-slate-600 group-hover:border-slate-300'
@@ -363,7 +371,7 @@ export const QuizTakingPage: React.FC = () => {
                 >
                   {letter}
                 </span>
-                <span className="text-sm font-medium leading-relaxed flex-1">{option}</span>
+                <span className="text-xs sm:text-sm font-medium leading-relaxed flex-1">{option}</span>
                 {isSelected && <CheckCircle2 className="w-5 h-5 text-indigo-600 shrink-0" />}
               </button>
             );
@@ -371,11 +379,11 @@ export const QuizTakingPage: React.FC = () => {
         </div>
 
         {/* Navigation & Submit Buttons */}
-        <div className="flex items-center justify-between pt-6 border-t border-slate-100">
+        <div className="flex items-center justify-between gap-3 pt-4 sm:pt-6 border-t border-slate-100">
           <button
             onClick={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}
             disabled={currentIndex === 0}
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 text-xs font-bold hover:bg-slate-50 transition disabled:opacity-30 disabled:pointer-events-none"
+            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 sm:px-5 py-3 rounded-xl border border-slate-200 text-slate-700 text-xs sm:text-sm font-bold hover:bg-slate-50 transition disabled:opacity-30 disabled:pointer-events-none active:scale-[0.98]"
           >
             <ChevronLeft className="w-4 h-4" /> {t('taking.previous', 'Previous')}
           </button>
@@ -383,14 +391,14 @@ export const QuizTakingPage: React.FC = () => {
           {currentIndex === totalQuestions - 1 ? (
             <button
               onClick={() => setConfirmModalOpen(true)}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 shadow-md shadow-emerald-600/20 transition hover:scale-105"
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 sm:px-7 py-3 rounded-xl bg-emerald-600 text-white text-xs sm:text-sm font-bold hover:bg-emerald-700 shadow-md shadow-emerald-600/20 transition active:scale-[0.98]"
             >
               <CheckCircle2 className="w-4 h-4" /> {t('taking.submitQuiz', 'Submit Quiz')}
             </button>
           ) : (
             <button
               onClick={() => setCurrentIndex((prev) => Math.min(totalQuestions - 1, prev + 1))}
-              className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 shadow-md shadow-indigo-600/20 transition"
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-5 sm:px-6 py-3 rounded-xl bg-indigo-600 text-white text-xs sm:text-sm font-bold hover:bg-indigo-700 shadow-md shadow-indigo-600/20 transition active:scale-[0.98]"
             >
               {t('taking.next', 'Next')} <ChevronRight className="w-4 h-4" />
             </button>
@@ -399,8 +407,8 @@ export const QuizTakingPage: React.FC = () => {
       </div>
 
       {/* Question Navigation Drawer / Grid */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-5 space-y-3 shadow-xs">
-        <div className="flex items-center justify-between">
+      <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 space-y-3 shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <span className="text-xs font-bold text-slate-800">
             {t('taking.navigation', 'Question Navigation')}
           </span>
@@ -414,7 +422,7 @@ export const QuizTakingPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5 sm:gap-2 max-h-48 overflow-y-auto pr-1">
           {quiz.questions.map((_, idx) => {
             const isAnswered = !!answers[idx];
             const isCurrent = currentIndex === idx;
@@ -428,7 +436,7 @@ export const QuizTakingPage: React.FC = () => {
               <button
                 key={idx}
                 onClick={() => setCurrentIndex(idx)}
-                className={`relative w-8 h-8 rounded-xl text-xs font-bold border transition ${btnStyle}`}
+                className={`relative w-8 h-8 sm:w-9 sm:h-9 rounded-xl text-xs font-bold border transition shrink-0 ${btnStyle}`}
               >
                 {idx + 1}
                 {isFlagged && (

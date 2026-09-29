@@ -98,9 +98,9 @@ export const QuizManagementPage: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             My Quizzes
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
@@ -110,19 +110,19 @@ export const QuizManagementPage: React.FC = () => {
 
         <Link
           to="/teacher/quizzes/new"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 shadow-md shadow-indigo-600/20 transition hover:scale-105"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 shadow-md shadow-indigo-600/20 transition w-full sm:w-auto"
         >
           <Plus className="w-4 h-4" /> Create New Quiz
         </Link>
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
+      <div className="flex items-center gap-2 border-b border-slate-200 pb-2 overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
         {['All', 'published', 'draft', 'archived'].map((status) => (
           <button
             key={status}
             onClick={() => setSelectedStatus(status)}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold capitalize transition ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold capitalize whitespace-nowrap transition ${
               selectedStatus === status
                 ? 'bg-indigo-600 text-white shadow-xs'
                 : 'text-slate-600 hover:bg-slate-100'
@@ -140,22 +140,22 @@ export const QuizManagementPage: React.FC = () => {
           <p className="text-xs text-slate-400">Loading your quizzes...</p>
         </div>
       ) : filteredQuizzes.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {filteredQuizzes.map((quiz) => (
             <div
               key={quiz._id}
-              className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-5"
+              className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-4 sm:space-y-5"
             >
               <div className="space-y-3">
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
+                <div className="flex items-center justify-between gap-2 flex-wrap">
+                  <div className="flex items-center gap-1.5 flex-wrap">
                     <SubjectBadge subject={quiz.subject} />
                     <DifficultyBadge difficulty={quiz.difficulty} />
                   </div>
                   <StatusBadge status={quiz.status} />
                 </div>
 
-                <h3 className="font-bold text-slate-900 text-lg leading-snug line-clamp-2">
+                <h3 className="font-bold text-slate-900 text-base sm:text-lg leading-snug line-clamp-2">
                   {quiz.title}
                 </h3>
 
@@ -163,7 +163,7 @@ export const QuizManagementPage: React.FC = () => {
                   {quiz.description || 'No description provided.'}
                 </p>
 
-                <div className="flex items-center gap-4 text-xs text-slate-500 pt-1">
+                <div className="flex items-center gap-3 sm:gap-4 text-xs text-slate-500 pt-1 flex-wrap">
                   <span className="flex items-center gap-1">
                     <HelpCircle className="w-3.5 h-3.5 text-slate-400" />
                     {quiz.questions?.length || 0} Questions
@@ -179,11 +179,11 @@ export const QuizManagementPage: React.FC = () => {
               </div>
 
               {/* Action Toolbar */}
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-1 text-slate-600">
+              <div className="pt-3.5 border-t border-slate-100 flex items-center justify-between gap-2 text-slate-600 flex-wrap">
                 <div className="flex items-center gap-1">
                   <Link
                     to={`/teacher/quizzes/${quiz._id}/edit`}
-                    className="p-2 rounded-xl hover:bg-slate-100 text-slate-700 hover:text-indigo-600 transition"
+                    className="p-2.5 sm:p-2 rounded-xl hover:bg-slate-100 text-slate-700 hover:text-indigo-600 transition"
                     title="Edit Quiz"
                   >
                     <Edit3 className="w-4 h-4" />
@@ -191,7 +191,7 @@ export const QuizManagementPage: React.FC = () => {
 
                   <button
                     onClick={() => setActiveShareQuiz(quiz)}
-                    className="p-2 rounded-xl hover:bg-slate-100 text-slate-700 hover:text-indigo-600 transition"
+                    className="p-2.5 sm:p-2 rounded-xl hover:bg-slate-100 text-slate-700 hover:text-indigo-600 transition"
                     title="Share Link & QR Code"
                   >
                     <Share2 className="w-4 h-4" />
@@ -199,7 +199,7 @@ export const QuizManagementPage: React.FC = () => {
 
                   <button
                     onClick={() => handleDuplicate(quiz._id)}
-                    className="p-2 rounded-xl hover:bg-slate-100 text-slate-700 hover:text-indigo-600 transition"
+                    className="p-2.5 sm:p-2 rounded-xl hover:bg-slate-100 text-slate-700 hover:text-indigo-600 transition"
                     title="Duplicate Quiz"
                   >
                     <Copy className="w-4 h-4" />
@@ -207,7 +207,7 @@ export const QuizManagementPage: React.FC = () => {
 
                   <button
                     onClick={() => handleStatusToggle(quiz)}
-                    className={`p-2 rounded-xl hover:bg-slate-100 transition ${
+                    className={`p-2.5 sm:p-2 rounded-xl hover:bg-slate-100 transition ${
                       quiz.status === 'published' ? 'text-amber-600' : 'text-emerald-600'
                     }`}
                     title={quiz.status === 'published' ? 'Unpublish to Draft' : 'Publish Quiz'}
@@ -217,7 +217,7 @@ export const QuizManagementPage: React.FC = () => {
 
                   <button
                     onClick={() => handleDelete(quiz._id)}
-                    className="p-2 rounded-xl hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition"
+                    className="p-2.5 sm:p-2 rounded-xl hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition"
                     title="Delete Quiz"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -226,7 +226,7 @@ export const QuizManagementPage: React.FC = () => {
 
                 <Link
                   to={`/teacher/quizzes/${quiz._id}/results`}
-                  className="inline-flex items-center gap-1 text-xs font-bold text-indigo-600 hover:text-indigo-800"
+                  className="inline-flex items-center gap-1 text-xs font-bold text-indigo-600 hover:text-indigo-800 py-1"
                 >
                   <Eye className="w-3.5 h-3.5" /> Results
                 </Link>

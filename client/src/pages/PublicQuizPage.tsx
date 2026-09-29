@@ -92,9 +92,9 @@ export const PublicQuizPage: React.FC = () => {
       : `https://api.dicebear.com/7.x/bottts/svg?seed=${teacherName}`;
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
-      <div className="bg-white rounded-3xl border border-slate-200/80 p-8 sm:p-12 shadow-xl shadow-slate-200/50 space-y-8">
-        <div className="flex items-center justify-between gap-3 pb-6 border-b border-slate-100">
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
+      <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-12 shadow-xl shadow-slate-200/50 space-y-6 sm:space-y-8">
+        <div className="flex items-center justify-between gap-3 pb-4 sm:pb-6 border-b border-slate-100 flex-wrap">
           <div className="flex items-center gap-2">
             <SubjectBadge subject={quiz.subject} />
             <DifficultyBadge difficulty={quiz.difficulty} />
@@ -103,36 +103,36 @@ export const PublicQuizPage: React.FC = () => {
         </div>
 
         <div className="space-y-3">
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
+          <h1 className="text-xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
             {quiz.title}
           </h1>
-          <p className="text-sm text-slate-600 leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
             {quiz.description || 'Welcome to this interactive assessment. Test your knowledge and get immediate results.'}
           </p>
         </div>
 
         {/* Assessment Specs Grid */}
-        <div className="grid grid-cols-3 gap-3">
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-center">
-            <HelpCircle className="w-5 h-5 text-indigo-500 mx-auto mb-1" />
-            <span className="text-xs font-bold text-slate-400 uppercase block">Questions</span>
-            <span className="text-base font-extrabold text-slate-900 mt-0.5 block">
+        <div className="grid grid-cols-3 gap-2 sm:gap-3">
+          <div className="p-3 sm:p-4 rounded-2xl bg-slate-50 border border-slate-100 text-center">
+            <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-500 mx-auto mb-1" />
+            <span className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase block">Questions</span>
+            <span className="text-sm sm:text-base font-extrabold text-slate-900 mt-0.5 block">
               {quiz.questions?.length || 0} Items
             </span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-center">
-            <Clock className="w-5 h-5 text-indigo-500 mx-auto mb-1" />
-            <span className="text-xs font-bold text-slate-400 uppercase block">Time Limit</span>
-            <span className="text-base font-extrabold text-slate-900 mt-0.5 block">
+          <div className="p-3 sm:p-4 rounded-2xl bg-slate-50 border border-slate-100 text-center">
+            <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-500 mx-auto mb-1" />
+            <span className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase block">Time Limit</span>
+            <span className="text-sm sm:text-base font-extrabold text-slate-900 mt-0.5 block">
               {quiz.timeLimit > 0 ? `${quiz.timeLimit} Mins` : 'Untimed'}
             </span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-center">
-            <RotateCcw className="w-5 h-5 text-indigo-500 mx-auto mb-1" />
-            <span className="text-xs font-bold text-slate-400 uppercase block">Max Attempts</span>
-            <span className="text-base font-extrabold text-slate-900 mt-0.5 block">
+          <div className="p-3 sm:p-4 rounded-2xl bg-slate-50 border border-slate-100 text-center">
+            <RotateCcw className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-500 mx-auto mb-1" />
+            <span className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase block">Attempts</span>
+            <span className="text-sm sm:text-base font-extrabold text-slate-900 mt-0.5 block">
               {quiz.maxAttempts > 0 ? `${quiz.maxAttempts} Tries` : 'Unlimited'}
             </span>
           </div>

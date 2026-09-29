@@ -131,9 +131,9 @@ export const TeacherClassesPage: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             Class Management & Cohorts
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
@@ -143,7 +143,7 @@ export const TeacherClassesPage: React.FC = () => {
 
         <button
           onClick={() => setCreateModalOpen(true)}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 shadow-md shadow-indigo-600/20 transition hover:scale-105"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 shadow-md shadow-indigo-600/20 transition w-full sm:w-auto"
         >
           <Plus className="w-4 h-4" /> Create New Class
         </button>
@@ -160,10 +160,10 @@ export const TeacherClassesPage: React.FC = () => {
           {classes.map((cls) => (
             <div
               key={cls._id}
-              className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-7 shadow-sm hover:shadow-md transition space-y-5 flex flex-col justify-between"
+              className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-7 shadow-sm hover:shadow-md transition space-y-5 flex flex-col justify-between"
             >
               <div className="space-y-3">
-                <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center justify-between gap-2 flex-wrap">
                   <span className="text-[10px] font-bold uppercase text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-full border border-indigo-100">
                     {cls.subject}
                   </span>
@@ -175,7 +175,7 @@ export const TeacherClassesPage: React.FC = () => {
                     </span>
                     <button
                       onClick={() => copyCode(cls.inviteCode)}
-                      className="text-slate-400 hover:text-indigo-600 transition"
+                      className="text-slate-400 hover:text-indigo-600 transition p-0.5"
                       title="Copy Invite Code"
                     >
                       <Copy className="w-3.5 h-3.5" />
@@ -183,7 +183,7 @@ export const TeacherClassesPage: React.FC = () => {
                   </div>
                 </div>
 
-                <h3 className="font-bold text-slate-900 text-lg leading-snug">{cls.name}</h3>
+                <h3 className="font-bold text-slate-900 text-base sm:text-lg leading-snug">{cls.name}</h3>
 
                 <p className="text-xs text-slate-500 leading-relaxed">
                   {cls.description || 'No description provided.'}
@@ -226,10 +226,10 @@ export const TeacherClassesPage: React.FC = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+              <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
                 <button
                   onClick={() => copyCode(cls.inviteCode)}
-                  className="text-xs font-semibold text-slate-600 hover:text-indigo-600 flex items-center gap-1.5"
+                  className="text-xs font-semibold text-slate-600 hover:text-indigo-600 flex items-center justify-center gap-1.5 py-1"
                 >
                   <Copy className="w-3.5 h-3.5" /> Share Invite Code
                 </button>
@@ -239,7 +239,7 @@ export const TeacherClassesPage: React.FC = () => {
                     setTargetClass(cls);
                     setAssignModalOpen(true);
                   }}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 shadow-sm transition"
+                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 shadow-sm transition"
                 >
                   <Send className="w-3.5 h-3.5" /> Assign Quiz
                 </button>

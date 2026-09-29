@@ -7,6 +7,7 @@ import QuestionBank from '../models/QuestionBank.js';
 import ClassGroup from '../models/ClassGroup.js';
 import Assignment from '../models/Assignment.js';
 import Notification from '../models/Notification.js';
+import { getAllJobQuestions } from './jobQuestions/generateAllJobQuestions.js';
 
 dotenv.config();
 
@@ -1646,19 +1647,305 @@ export const seedDatabase = async () => {
       });
     }
 
+    console.log('[Seeder] ==============================================');
+    console.log('[Seeder] Seeding 1,000+ Job Preparation Questions...');
+    const allJobQuestions = getAllJobQuestions();
+    console.log(`[Seeder] Loaded ${allJobQuestions.length} authenticated job recruitment questions!`);
+
+    // Group questions by subject
+    const banglaList = allJobQuestions.filter(q => q.subject === 'Bangla');
+    const englishList = allJobQuestions.filter(q => q.subject === 'English');
+    const mathList = allJobQuestions.filter(q => q.subject === 'Mathematics');
+    const gkList = allJobQuestions.filter(q => q.subject === 'General Knowledge');
+    const scienceIctList = allJobQuestions.filter(q => q.subject === 'General Science & ICT');
+    const bankList = allJobQuestions.filter(q => q.subject === 'Bank Job Preparation');
+    const teacherList = allJobQuestions.filter(q => q.subject === 'Primary Teacher Exam');
+
+    // Create 8 Dedicated Job Preparation Quizzes
+    const jobQuizBangla = await Quiz.create({
+      title: 'বাংলা ভাষা ও সাহিত্য (BCS, Bank & Govt Jobs Special)',
+      description: 'বিসিএস, ব্যাংক, প্রাথমিক শিক্ষক ও সরকারি চাকরির বিগত বছরের সবচেয়ে গুরুত্বপূর্ণ বাংলা ব্যাকরণ ও সাহিত্যের প্রশ্নোত্তর।',
+      subject: 'Bangla',
+      difficulty: 'intermediate',
+      teacher: teacher1._id,
+      status: 'published',
+      timeLimit: 40,
+      passingPercentage: 65,
+      maxAttempts: 0,
+      randomizeQuestions: true,
+      randomizeAnswers: false,
+      showCorrectAnswers: true,
+      shareCode: 'job-bangla',
+      attemptsCount: 42,
+      questions: banglaList.map(q => ({
+        questionText: q.questionText,
+        type: q.type || 'multiple-choice',
+        options: q.options,
+        correctAnswer: q.correctAnswer,
+        explanation: q.explanation,
+        points: q.points || 1,
+      })),
+    });
+
+    const jobQuizEnglish = await Quiz.create({
+      title: 'English Language & Literature (BCS, Bank & Govt Circulars)',
+      description: 'Appropriate Prepositions, Idioms & Phrases, Subject-Verb Agreement, Synonyms/Antonyms, Literature & Grammar questions from past recruitment exams.',
+      subject: 'English',
+      difficulty: 'intermediate',
+      teacher: teacher1._id,
+      status: 'published',
+      timeLimit: 40,
+      passingPercentage: 65,
+      maxAttempts: 0,
+      randomizeQuestions: true,
+      randomizeAnswers: false,
+      showCorrectAnswers: true,
+      shareCode: 'job-english',
+      attemptsCount: 38,
+      questions: englishList.map(q => ({
+        questionText: q.questionText,
+        type: q.type || 'multiple-choice',
+        options: q.options,
+        correctAnswer: q.correctAnswer,
+        explanation: q.explanation,
+        points: q.points || 1,
+      })),
+    });
+
+    const jobQuizMath = await Quiz.create({
+      title: 'গণিত ও মানসিক দক্ষতা (Mathematics & Mental Ability Special)',
+      description: 'পাটিগণিত (শতকরা, লাভ-ক্ষতি, সুদকষা, ঐকিক নিয়ম), বীজগণিত, জ্যামিতি ও মানসিক দক্ষতার বাছাইকৃত প্রশ্নোত্তর।',
+      subject: 'Mathematics',
+      difficulty: 'intermediate',
+      teacher: teacher1._id,
+      status: 'published',
+      timeLimit: 45,
+      passingPercentage: 60,
+      maxAttempts: 0,
+      randomizeQuestions: true,
+      randomizeAnswers: false,
+      showCorrectAnswers: true,
+      shareCode: 'job-math',
+      attemptsCount: 51,
+      questions: mathList.map(q => ({
+        questionText: q.questionText,
+        type: q.type || 'multiple-choice',
+        options: q.options,
+        correctAnswer: q.correctAnswer,
+        explanation: q.explanation,
+        points: q.points || 1,
+      })),
+    });
+
+    const jobQuizGk = await Quiz.create({
+      title: 'সাধারণ জ্ঞান - বাংলাদেশ ও আন্তর্জাতিক বিষয়াবলি (GK Special)',
+      description: 'মুক্তিযুদ্ধ, সংবিধান, মেগা প্রকল্প, নদ-নদী, জাতিসংঘ, আন্তর্জাতিক চুক্তি, সংস্থা ও বৈশ্বিক ভৌগোলিক বিষয়ের প্রশ্নোত্তর।',
+      subject: 'General Knowledge',
+      difficulty: 'intermediate',
+      teacher: teacher1._id,
+      status: 'published',
+      timeLimit: 30,
+      passingPercentage: 65,
+      maxAttempts: 0,
+      randomizeQuestions: true,
+      randomizeAnswers: false,
+      showCorrectAnswers: true,
+      shareCode: 'job-gk',
+      attemptsCount: 64,
+      questions: gkList.map(q => ({
+        questionText: q.questionText,
+        type: q.type || 'multiple-choice',
+        options: q.options,
+        correctAnswer: q.correctAnswer,
+        explanation: q.explanation,
+        points: q.points || 1,
+      })),
+    });
+
+    const jobQuizScienceIct = await Quiz.create({
+      title: 'সাধারণ বিজ্ঞান ও তথ্যপ্রযুক্তি (General Science & ICT Special)',
+      description: 'দৈনন্দিন বিজ্ঞান, পদার্থ, রসায়ন, জীববিজ্ঞান, কম্পিউটার হার্ডওয়্যার, নেটওয়ার্কিং, সাইবার নিরাপত্তা ও প্রোগ্রামিং।',
+      subject: 'General Science & ICT',
+      difficulty: 'intermediate',
+      teacher: teacher1._id,
+      status: 'published',
+      timeLimit: 30,
+      passingPercentage: 65,
+      maxAttempts: 0,
+      randomizeQuestions: true,
+      randomizeAnswers: false,
+      showCorrectAnswers: true,
+      shareCode: 'job-science-ict',
+      attemptsCount: 35,
+      questions: scienceIctList.map(q => ({
+        questionText: q.questionText,
+        type: q.type || 'multiple-choice',
+        options: q.options,
+        correctAnswer: q.correctAnswer,
+        explanation: q.explanation,
+        points: q.points || 1,
+      })),
+    });
+
+    const jobQuizBank = await Quiz.create({
+      title: 'বাংলাদেশ ব্যাংক ও সরকারি ব্যাংক নিয়োগ স্পেশাল (Bank Job Preparation)',
+      description: 'Central Banking, Monetary Policy, NI Act 1881, CAMELS, Financial Math, Accounting & Banking Terminologies.',
+      subject: 'Bank Job Preparation',
+      difficulty: 'advanced',
+      teacher: teacher1._id,
+      status: 'published',
+      timeLimit: 40,
+      passingPercentage: 65,
+      maxAttempts: 0,
+      randomizeQuestions: true,
+      randomizeAnswers: false,
+      showCorrectAnswers: true,
+      shareCode: 'job-bank',
+      attemptsCount: 47,
+      questions: bankList.map(q => ({
+        questionText: q.questionText,
+        type: q.type || 'multiple-choice',
+        options: q.options,
+        correctAnswer: q.correctAnswer,
+        explanation: q.explanation,
+        points: q.points || 1,
+      })),
+    });
+
+    const jobQuizTeacher = await Quiz.create({
+      title: 'প্রাথমিক সহকারী শিক্ষক ও NTRCA শিক্ষক নিবন্ধন স্পেশাল (Primary Teacher Exam)',
+      description: 'বাধ্যতামূলক প্রাথমিক শিক্ষা আইন, পেডাগোজি, শিশু মনোবিজ্ঞান, মূল্যায়ন পদ্ধতি ও প্রাথমিক পাঠ্যবই ভিত্তিক বিগত বছরের প্রশ্নোত্তর।',
+      subject: 'Primary Teacher Exam',
+      difficulty: 'beginner',
+      teacher: teacher1._id,
+      status: 'published',
+      timeLimit: 40,
+      passingPercentage: 65,
+      maxAttempts: 0,
+      randomizeQuestions: true,
+      randomizeAnswers: false,
+      showCorrectAnswers: true,
+      shareCode: 'job-teacher',
+      attemptsCount: 56,
+      questions: teacherList.map(q => ({
+        questionText: q.questionText,
+        type: q.type || 'multiple-choice',
+        options: q.options,
+        correctAnswer: q.correctAnswer,
+        explanation: q.explanation,
+        points: q.points || 1,
+      })),
+    });
+
+    // Cross-disciplinary Mega BCS Model Test (100 questions)
+    const megaQuestions = [
+      ...banglaList.slice(0, 20),
+      ...englishList.slice(0, 20),
+      ...mathList.slice(0, 15),
+      ...gkList.slice(0, 20),
+      ...scienceIctList.slice(0, 15),
+      ...bankList.slice(0, 5),
+      ...teacherList.slice(0, 5),
+    ];
+
+    const jobQuizMega = await Quiz.create({
+      title: 'বিসিএস প্রিলিমিনারি ও সরকারি চাকরি মেগা মডেল টেস্ট (BCS & Mega Circular Test)',
+      description: 'বিসিএস প্রিলিমিনারি ও সকল গ্রেডের সরকারি নিয়োগ পরীক্ষার পূর্ণাঙ্গ কম্বাইন্ড মডেল টেস্ট। বাংলা, ইংরেজি, গণিত, সাধারণ জ্ঞান ও আইসিটি সমন্বিত।',
+      subject: 'BCS & Govt Jobs',
+      difficulty: 'advanced',
+      teacher: teacher1._id,
+      status: 'published',
+      timeLimit: 60,
+      passingPercentage: 60,
+      maxAttempts: 0,
+      randomizeQuestions: true,
+      randomizeAnswers: false,
+      showCorrectAnswers: true,
+      shareCode: 'job-bcs-mega',
+      attemptsCount: 89,
+      questions: megaQuestions.map(q => ({
+        questionText: q.questionText,
+        type: q.type || 'multiple-choice',
+        options: q.options,
+        correctAnswer: q.correctAnswer,
+        explanation: q.explanation,
+        points: q.points || 1,
+      })),
+    });
+
+    console.log('[Seeder] Populating QuestionBank with all 1,020 job recruitment questions...');
+    const questionBankEntries = allJobQuestions.map(q => ({
+      teacher: teacher1._id,
+      subject: q.subject,
+      topic: q.topic || 'General',
+      difficulty: q.difficulty || 'beginner',
+      questionText: q.questionText,
+      type: q.type || 'multiple-choice',
+      options: q.options,
+      correctAnswer: q.correctAnswer,
+      explanation: q.explanation || '',
+      points: q.points || 1,
+    }));
+    await QuestionBank.insertMany(questionBankEntries);
+    console.log(`[Seeder] Successfully inserted ${questionBankEntries.length} items into QuestionBank!`);
+
+    // Student demo attempts on Job Quizzes to show immediate progress
+    const demoJobAttempts = [
+      { quiz: jobQuizBangla, subject: 'Bangla', score: 18, max: 20, pct: 90, daysAgo: 2, switches: 0 },
+      { quiz: jobQuizEnglish, subject: 'English', score: 17, max: 20, pct: 85, daysAgo: 1, switches: 0 },
+      { quiz: jobQuizGk, subject: 'General Knowledge', score: 19, max: 20, pct: 95, daysAgo: 0, switches: 0 },
+    ];
+
+    for (const d of demoJobAttempts) {
+      const sliceQuestions = d.quiz.questions.slice(0, 20);
+      await QuizAttempt.create({
+        student: student1._id,
+        quiz: d.quiz._id,
+        quizTitle: d.quiz.title,
+        subject: d.subject,
+        questionsSnapshot: sliceQuestions.map((q: any) => ({
+          questionText: q.questionText,
+          type: q.type,
+          options: q.options,
+          correctAnswer: q.correctAnswer,
+          explanation: q.explanation,
+          points: q.points,
+        })),
+        answers: sliceQuestions.map((q: any, idx: number) => ({
+          questionIndex: idx,
+          questionText: q.questionText,
+          selectedAnswer: idx < d.score ? q.correctAnswer : q.options[0],
+          correctAnswer: q.correctAnswer,
+          isCorrect: idx < d.score,
+          pointsEarned: idx < d.score ? q.points : 0,
+          explanation: q.explanation,
+        })),
+        score: d.score,
+        maxScore: d.max,
+        percentage: d.pct,
+        passed: d.pct >= 65,
+        timeSpentSeconds: 600 + Math.floor(Math.random() * 150),
+        tabSwitchesCount: d.switches,
+        attemptNumber: 1,
+        completedAt: new Date(Date.now() - d.daysAgo * 24 * 60 * 60 * 1000),
+      });
+    }
+
     // Seed notifications
     await Notification.create({
       user: student1._id,
-      title: 'Welcome to QuizRoom Self-Study',
-      message: 'Explore over 120+ published questions across HTML, CSS, JavaScript, TypeScript, React, Next.js, Python, and Node.js. No teacher required!',
+      title: '1,000+ Job Preparation Questions Live!',
+      message: 'Explore over 1,000+ authentic questions across BCS, Bank Jobs, Primary Teacher Exam, Bangla, English, Mathematics, General Knowledge, Science & ICT, and Web Development. Start practicing now!',
       type: 'assignment',
       link: '/student/quizzes',
       isRead: false,
     });
 
     console.log('[Seeder] ==============================================');
-    console.log('[Seeder] 8 Full Quizzes Seeded Successfully!');
-    console.log('[Seeder] - HTML, CSS, JavaScript, TypeScript, React, Next.js, Python, Node.js');
+    console.log('[Seeder] 16 Total Quizzes Seeded Successfully!');
+    console.log('[Seeder] - 8 Web Programming Quizzes (HTML, CSS, JS, TS, React, Next, Python, Node)');
+    console.log('[Seeder] - 8 Dedicated Job Preparation Quizzes (Bangla, English, Math, GK, Science & ICT, Bank, Teacher, BCS Mega)');
+    console.log(`[Seeder] - ${allJobQuestions.length} Questions in QuestionBank`);
     console.log('[Seeder] Demo Credentials:');
     console.log('[Seeder]   Teacher: teacher@example.com / password123');
     console.log('[Seeder]   Student: student@example.com / password123');

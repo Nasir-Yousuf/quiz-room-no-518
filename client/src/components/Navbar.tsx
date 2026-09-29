@@ -84,19 +84,19 @@ export const Navbar: React.FC = () => {
 
   return (
     <nav className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 transition-all">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo & Brand */}
-          <div className="flex items-center gap-8">
-            <Link to="/" className="flex items-center gap-2.5 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-indigo-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform">
-                <GraduationCap className="w-6 h-6" />
+          <div className="flex items-center gap-4 lg:gap-8">
+            <Link to="/" className="flex items-center gap-2 group shrink-0">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-indigo-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform">
+                <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
-              <div>
-                <span className="font-extrabold text-xl tracking-tight text-slate-900 group-hover:text-indigo-600 transition-colors">
+              <div className="flex items-center">
+                <span className="font-extrabold text-lg sm:text-xl tracking-tight text-slate-900 group-hover:text-indigo-600 transition-colors">
                   QuizRoom
                 </span>
-                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-indigo-500 ml-1.5 px-1.5 py-0.5 rounded bg-indigo-50 border border-indigo-100">
+                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-indigo-500 ml-1 sm:ml-1.5 px-1 sm:px-1.5 py-0.5 rounded bg-indigo-50 border border-indigo-100">
                   518
                 </span>
               </div>
@@ -127,9 +127,11 @@ export const Navbar: React.FC = () => {
           </div>
 
           {/* Right Header: Language Switcher, Notifications & Auth/Profile */}
-          <div className="flex items-center gap-2.5 sm:gap-3">
-            {/* Global Language Switcher */}
-            <LanguageToggle variant="compact" />
+          <div className="flex items-center gap-1.5 sm:gap-3">
+            {/* Desktop & Tablet Language Switcher (mobile has it in drawer) */}
+            <div className="hidden sm:inline-flex">
+              <LanguageToggle variant="compact" />
+            </div>
 
             {user ? (
               <>
@@ -139,6 +141,7 @@ export const Navbar: React.FC = () => {
                     onClick={() => setNotifOpen(!notifOpen)}
                     className="relative p-2 rounded-xl text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition"
                     title={t('taking.navigation', 'Notifications')}
+                    aria-label="Notifications"
                   >
                     <Bell className="w-5 h-5" />
                     {unreadCount > 0 && (
@@ -149,8 +152,8 @@ export const Navbar: React.FC = () => {
                   </button>
 
                   {notifOpen && (
-                    <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl border border-slate-200 shadow-2xl py-3 z-50 animate-in fade-in zoom-in-95">
-                      <div className="flex items-center justify-between px-4 pb-2 border-b border-slate-100">
+                    <div className="fixed inset-x-3 top-16 sm:absolute sm:inset-auto sm:right-0 sm:mt-2 sm:w-96 bg-white rounded-2xl border border-slate-200 shadow-2xl py-3 z-50 animate-in fade-in zoom-in-95 max-h-[80vh] flex flex-col">
+                      <div className="flex items-center justify-between px-4 pb-2 border-b border-slate-100 shrink-0">
                         <span className="font-bold text-sm text-slate-900">Notifications</span>
                         {unreadCount > 0 && (
                           <button
@@ -161,7 +164,7 @@ export const Navbar: React.FC = () => {
                           </button>
                         )}
                       </div>
-                      <div className="max-h-80 overflow-y-auto divide-y divide-slate-50">
+                      <div className="overflow-y-auto divide-y divide-slate-50 flex-1">
                         {notifications.length === 0 ? (
                           <div className="p-6 text-center text-xs text-slate-400">
                             No notifications yet
@@ -201,12 +204,13 @@ export const Navbar: React.FC = () => {
                 <div className="relative" ref={profileRef}>
                   <button
                     onClick={() => setProfileOpen(!profileOpen)}
-                    className="flex items-center gap-2.5 p-1.5 pl-2 rounded-xl hover:bg-slate-100 transition border border-transparent hover:border-slate-200"
+                    className="flex items-center gap-1.5 sm:gap-2.5 p-1 sm:p-1.5 sm:pl-2 rounded-xl hover:bg-slate-100 transition border border-transparent hover:border-slate-200"
+                    aria-label="User menu"
                   >
                     <img
                       src={user.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${user.name}`}
                       alt={user.name}
-                      className="w-8 h-8 rounded-lg bg-indigo-50 border border-slate-200 object-cover"
+                      className="w-8 h-8 rounded-lg bg-indigo-50 border border-slate-200 object-cover shrink-0"
                     />
                     <div className="hidden sm:block text-left">
                       <p className="text-xs font-bold text-slate-800 leading-tight">{user.name}</p>
@@ -214,7 +218,7 @@ export const Navbar: React.FC = () => {
                         {user.role === 'teacher' ? t('nav.roleTeacher', 'Educator') : t('nav.roleStudent', 'Student')}
                       </span>
                     </div>
-                    <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+                    <ChevronDown className="hidden sm:block w-3.5 h-3.5 text-slate-400" />
                   </button>
 
                   {profileOpen && (
@@ -226,13 +230,13 @@ export const Navbar: React.FC = () => {
                       <Link
                         to="/profile"
                         onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition"
+                        className="flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition"
                       >
                         <UserIcon className="w-4 h-4" /> {t('nav.myProgress', 'My Profile')}
                       </Link>
                       <button
                         onClick={handleLogout}
-                        className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-rose-600 hover:bg-rose-50 transition text-left"
+                        className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium text-rose-600 hover:bg-rose-50 transition text-left"
                       >
                         <LogOut className="w-4 h-4" /> {t('nav.logout', 'Sign Out')}
                       </button>
@@ -241,19 +245,20 @@ export const Navbar: React.FC = () => {
                 </div>
               </>
             ) : (
-              <div className="flex items-center gap-2 sm:gap-3">
+              <div className="flex items-center gap-1.5 sm:gap-3">
                 <Link
                   to="/login"
-                  className="px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-slate-700 hover:text-indigo-600 transition"
+                  className="px-2.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-slate-700 hover:text-indigo-600 transition"
                 >
                   {t('nav.signIn', 'Sign In')}
                 </Link>
                 <Link
                   to="/register"
-                  className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs sm:text-sm font-semibold hover:bg-indigo-700 shadow-md shadow-indigo-500/20 transition-all hover:scale-[1.02]"
+                  className="inline-flex items-center gap-1 sm:gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs sm:text-sm font-semibold hover:bg-indigo-700 shadow-md shadow-indigo-500/20 transition-all hover:scale-[1.02]"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
-                  {t('nav.getStarted', 'Get Started')}
+                  <span className="hidden xs:inline">{t('nav.getStarted', 'Get Started')}</span>
+                  <span className="xs:hidden">Join</span>
                 </Link>
               </div>
             )}
@@ -262,7 +267,8 @@ export const Navbar: React.FC = () => {
             <div className="flex md:hidden">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                className="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition"
+                aria-label="Toggle navigation menu"
               >
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
@@ -273,47 +279,67 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-2">
-          <div className="pb-2 border-b border-slate-100 flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500">Language / ভাষা:</span>
+        <div className="md:hidden border-t border-slate-200 bg-white/98 backdrop-blur-xl px-4 pt-3 pb-6 space-y-2 shadow-xl animate-in slide-in-from-top-2 duration-200">
+          <div className="pb-3 border-b border-slate-100 flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-500">Language / ভাষা:</span>
             <LanguageToggle variant="compact" />
           </div>
-          {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600"
-            >
-              {link.icon && <link.icon className="w-4 h-4" />}
-              {link.name}
-            </Link>
-          ))}
+
+          <div className="space-y-1 pt-1">
+            {navLinks.map((link) => {
+              const isActive = location.pathname === link.path;
+              return (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold transition ${
+                    isActive
+                      ? 'bg-indigo-50 text-indigo-700 font-bold'
+                      : 'text-slate-700 hover:bg-slate-100'
+                  }`}
+                >
+                  {link.icon && <link.icon className="w-4 h-4 text-indigo-600" />}
+                  {link.name}
+                </Link>
+              );
+            })}
+          </div>
+
           {user ? (
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                handleLogout();
-              }}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-rose-600 hover:bg-rose-50"
-            >
-              <LogOut className="w-4 h-4" /> {t('nav.logout', 'Sign Out')}
-            </button>
+            <div className="pt-2 border-t border-slate-100 space-y-1">
+              <Link
+                to="/profile"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100"
+              >
+                <UserIcon className="w-4 h-4 text-indigo-600" /> My Profile
+              </Link>
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  handleLogout();
+                }}
+                className="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-rose-600 hover:bg-rose-50 transition text-left"
+              >
+                <LogOut className="w-4 h-4" /> {t('nav.logout', 'Sign Out')}
+              </button>
+            </div>
           ) : (
             <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
               <Link
                 to="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700"
+                className="w-full text-center py-3 rounded-xl border border-slate-200 text-sm font-bold text-slate-700 hover:bg-slate-50"
               >
                 {t('nav.signIn', 'Sign In')}
               </Link>
               <Link
                 to="/register"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-semibold shadow"
+                className="w-full text-center py-3 rounded-xl bg-indigo-600 text-white text-sm font-bold shadow-md shadow-indigo-600/20"
               >
-                {t('nav.getStarted', 'Get Started')}
+                {t('nav.getStarted', 'Get Started Free')}
               </Link>
             </div>
           )}

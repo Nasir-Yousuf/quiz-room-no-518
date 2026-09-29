@@ -47,7 +47,7 @@ export const QuizResultsDetailPage: React.FC = () => {
       </div>
 
       {/* Submissions Table */}
-      <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 space-y-4 shadow-xs">
+      <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-8 space-y-4 shadow-xs">
         <div className="flex items-center justify-between">
           <h3 className="font-bold text-slate-900 text-base">
             All Student Attempts ({attempts.length})
@@ -60,8 +60,8 @@ export const QuizResultsDetailPage: React.FC = () => {
             <p className="text-xs text-slate-400">Loading student attempts...</p>
           </div>
         ) : attempts.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+          <div className="overflow-x-auto -mx-5 sm:mx-0 px-5 sm:px-0">
+            <table className="w-full text-left text-xs min-w-[620px]">
               <thead className="text-[11px] font-bold uppercase text-slate-400 border-b border-slate-100">
                 <tr>
                   <th className="pb-3">Student</th>

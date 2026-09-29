@@ -69,9 +69,9 @@ export const QuizResultPage: React.FC = () => {
   const secs = attempt.timeSpentSeconds % 60;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+    <div className="max-w-4xl mx-auto px-3 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
       {/* Result Hero Card */}
-      <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-10 shadow-sm text-center space-y-6">
+      <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-5 sm:p-10 shadow-sm text-center space-y-5 sm:space-y-6">
         <div className="inline-flex items-center gap-2">
           <SubjectBadge subject={attempt.subject} />
           <span className="text-xs text-slate-400">•</span>
@@ -80,13 +80,13 @@ export const QuizResultPage: React.FC = () => {
           </span>
         </div>
 
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+        <h1 className="text-xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
           {attempt.quizTitle}
         </h1>
 
         {/* Circular / Score Highlight */}
-        <div className="max-w-xs mx-auto p-6 rounded-2xl bg-gradient-to-tr from-indigo-50/70 via-slate-50 to-indigo-50/40 border border-indigo-100/80 shadow-xs space-y-1">
-          <p className="text-5xl font-black text-indigo-950 tracking-tight">{attempt.percentage}%</p>
+        <div className="max-w-xs mx-auto p-5 sm:p-6 rounded-2xl bg-gradient-to-tr from-indigo-50/70 via-slate-50 to-indigo-50/40 border border-indigo-100/80 shadow-xs space-y-1">
+          <p className="text-4xl sm:text-5xl font-black text-indigo-950 tracking-tight">{attempt.percentage}%</p>
           <p className="text-xs font-bold text-slate-500">
             {attempt.score} {language === 'bn' ? 'পয়েন্ট (সর্বমোট' : 'out of'} {attempt.maxScore} {language === 'bn' ? 'পয়েন্ট)' : 'points'}
           </p>
@@ -107,46 +107,46 @@ export const QuizResultPage: React.FC = () => {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-          <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 text-center">
-            <span className="block text-[11px] font-bold text-slate-400 uppercase">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 pt-2">
+          <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-50 border border-slate-100 text-center">
+            <span className="block text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase">
               {language === 'bn' ? 'সঠিক' : 'Correct'}
             </span>
-            <span className="text-lg font-extrabold text-emerald-600">{correctCount}</span>
+            <span className="text-base sm:text-lg font-extrabold text-emerald-600">{correctCount}</span>
           </div>
-          <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 text-center">
-            <span className="block text-[11px] font-bold text-slate-400 uppercase">
+          <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-50 border border-slate-100 text-center">
+            <span className="block text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase">
               {language === 'bn' ? 'ভুল' : 'Incorrect'}
             </span>
-            <span className="text-lg font-extrabold text-rose-500">{incorrectCount}</span>
+            <span className="text-base sm:text-lg font-extrabold text-rose-500">{incorrectCount}</span>
           </div>
-          <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 text-center">
-            <span className="block text-[11px] font-bold text-slate-400 uppercase">
+          <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-50 border border-slate-100 text-center">
+            <span className="block text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase">
               {t('result.timeSpent', 'Time Taken')}
             </span>
-            <span className="text-lg font-extrabold text-slate-800">
+            <span className="text-base sm:text-lg font-extrabold text-slate-800">
               {mins}{language === 'bn' ? ' মি. ' : 'm '}{secs}{language === 'bn' ? ' সে.' : 's'}
             </span>
           </div>
-          <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 text-center">
-            <span className="block text-[11px] font-bold text-slate-400 uppercase">
+          <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-50 border border-slate-100 text-center">
+            <span className="block text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase">
               {t('result.switches', 'Tab Switches')}
             </span>
-            <span className="text-lg font-extrabold text-slate-800">{attempt.tabSwitchesCount}</span>
+            <span className="text-base sm:text-lg font-extrabold text-slate-800">{attempt.tabSwitchesCount}</span>
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4 border-t border-slate-100">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3 pt-4 border-t border-slate-100">
           <Link
             to="/student/quizzes"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-6 py-2.5 rounded-xl border border-slate-200 text-slate-700 text-xs font-bold hover:bg-slate-50 transition"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-6 py-3 rounded-xl border border-slate-200 text-slate-700 text-xs sm:text-sm font-bold hover:bg-slate-50 transition"
           >
             <BookOpen className="w-4 h-4" /> {language === 'bn' ? 'অন্যান্য কুইজ দেখুন' : 'Explore Other Quizzes'}
           </Link>
           <Link
             to="/student/progress"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-6 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 shadow-md shadow-indigo-600/20 transition"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-6 py-3 rounded-xl bg-indigo-600 text-white text-xs sm:text-sm font-bold hover:bg-indigo-700 shadow-md shadow-indigo-600/20 transition"
           >
             {language === 'bn' ? 'অগ্রগতির ইতিহাস দেখুন' : 'View Progress History'} <ArrowRight className="w-4 h-4" />
           </Link>
@@ -157,7 +157,7 @@ export const QuizResultPage: React.FC = () => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
+            <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">
               {t('result.reviewTitle', 'Detailed Question Review')}
             </h2>
             <p className="text-xs text-slate-500">
@@ -166,7 +166,7 @@ export const QuizResultPage: React.FC = () => {
                 : 'Review correct answers, explanations, and key takeaways'}
             </p>
           </div>
-          <span className="text-xs font-bold text-slate-400">
+          <span className="text-xs font-bold text-slate-400 shrink-0">
             {attempt.answers.length} {language === 'bn' ? 'টি প্রশ্ন' : 'Questions'}
           </span>
         </div>
@@ -184,14 +184,14 @@ export const QuizResultPage: React.FC = () => {
             return (
               <div
                 key={idx}
-                className={`bg-white rounded-3xl border p-6 sm:p-7 shadow-xs space-y-4 transition ${
+                className={`bg-white rounded-2xl sm:rounded-3xl border p-4 sm:p-7 shadow-xs space-y-3.5 sm:space-y-4 transition ${
                   ans.isCorrect ? 'border-emerald-200/80' : 'border-rose-200/80'
                 }`}
               >
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-2">
                     <span
-                      className={`w-6 h-6 rounded-lg text-xs font-bold flex items-center justify-center ${
+                      className={`w-6 h-6 rounded-lg text-xs font-bold flex items-center justify-center shrink-0 ${
                         ans.isCorrect ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
                       }`}
                     >
@@ -204,28 +204,28 @@ export const QuizResultPage: React.FC = () => {
                     </span>
                   </div>
                   {ans.isCorrect ? (
-                    <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                    <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 shrink-0">
                       <CheckCircle2 className="w-3.5 h-3.5" /> {language === 'bn' ? 'সঠিক' : 'Correct'}
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 text-xs font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-full border border-rose-200">
+                    <span className="inline-flex items-center gap-1 text-xs font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-full border border-rose-200 shrink-0">
                       <XCircle className="w-3.5 h-3.5" /> {language === 'bn' ? 'ভুল' : 'Incorrect'}
                     </span>
                   )}
                 </div>
 
-                <h3 className="font-bold text-slate-900 text-base leading-snug">
+                <h3 className="font-bold text-slate-900 text-sm sm:text-base leading-snug">
                   {localizedQ.questionText}
                 </h3>
 
                 {ans.codeSnippet && (
-                  <div className="p-3.5 rounded-xl bg-slate-900 text-slate-100 font-mono text-xs overflow-x-auto">
-                    <pre>{ans.codeSnippet}</pre>
+                  <div className="p-3 sm:p-3.5 rounded-xl bg-slate-900 text-slate-100 font-mono text-xs overflow-x-auto max-h-56">
+                    <pre className="whitespace-pre">{ans.codeSnippet}</pre>
                   </div>
                 )}
 
                 {/* Answers Comparison */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 text-xs">
                   <div
                     className={`p-3 rounded-xl border ${
                       ans.isCorrect

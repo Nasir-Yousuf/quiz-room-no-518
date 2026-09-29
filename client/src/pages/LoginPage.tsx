@@ -55,8 +55,8 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
-      <div className="max-w-md w-full space-y-8 bg-white p-8 sm:p-10 rounded-3xl border border-slate-200/80 shadow-xl shadow-slate-200/40">
+    <div className="min-h-[80vh] flex items-center justify-center px-4 py-6 sm:py-12">
+      <div className="max-w-md w-full space-y-6 sm:space-y-8 bg-white p-5 sm:p-10 rounded-3xl border border-slate-200/80 shadow-xl shadow-slate-200/40">
         <div className="text-center space-y-2">
           <div className="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center mx-auto shadow-md shadow-indigo-500/20">
             <GraduationCap className="w-6 h-6" />
@@ -70,23 +70,23 @@ export const LoginPage: React.FC = () => {
         </div>
 
         {/* Demo Accounts Quick-Fill Box */}
-        <div className="p-3.5 rounded-2xl bg-indigo-50/70 border border-indigo-100 space-y-2">
+        <div className="p-3 sm:p-3.5 rounded-2xl bg-indigo-50/70 border border-indigo-100 space-y-2">
           <p className="text-[11px] font-semibold text-indigo-900 flex items-center gap-1.5">
             <Zap className="w-3.5 h-3.5 text-indigo-600" />
             Quick Demo Fill:
           </p>
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <button
               type="button"
               onClick={() => fillCredentials('teacher@example.com')}
-              className="flex-1 py-1.5 px-2 rounded-xl bg-white border border-indigo-200 text-indigo-700 text-xs font-semibold hover:bg-indigo-50 transition shadow-xs flex items-center justify-center gap-1"
+              className="flex-1 py-2 sm:py-1.5 px-2 rounded-xl bg-white border border-indigo-200 text-indigo-700 text-xs font-semibold hover:bg-indigo-50 transition shadow-xs flex items-center justify-center gap-1"
             >
               Teacher Demo
             </button>
             <button
               type="button"
               onClick={() => fillCredentials('student@example.com')}
-              className="flex-1 py-1.5 px-2 rounded-xl bg-white border border-emerald-200 text-emerald-800 text-xs font-semibold hover:bg-emerald-50 transition shadow-xs flex items-center justify-center gap-1"
+              className="flex-1 py-2 sm:py-1.5 px-2 rounded-xl bg-white border border-emerald-200 text-emerald-800 text-xs font-semibold hover:bg-emerald-50 transition shadow-xs flex items-center justify-center gap-1"
             >
               Student Demo
             </button>

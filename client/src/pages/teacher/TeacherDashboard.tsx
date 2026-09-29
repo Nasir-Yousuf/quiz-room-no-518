@@ -56,16 +56,16 @@ export const TeacherDashboard: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full sm:w-auto">
           <Link
             to="/teacher/quizzes/new"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 shadow-md shadow-indigo-600/30 transition hover:scale-105"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 shadow-md shadow-indigo-600/30 transition"
           >
             <Plus className="w-4 h-4" /> Create New Quiz
           </Link>
           <Link
             to="/teacher/classes"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 text-white text-xs font-bold hover:bg-white/20 transition border border-white/20"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 text-white text-xs font-bold hover:bg-white/20 transition border border-white/20"
           >
             Manage Classes
           </Link>
@@ -73,7 +73,7 @@ export const TeacherDashboard: React.FC = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <StatsCard
           label="Total Quizzes"
           value={stats?.totalQuizzes ?? 0}
@@ -107,10 +107,10 @@ export const TeacherDashboard: React.FC = () => {
       {/* Main Grid: Popular Quizzes & Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Popular Quizzes (2 Cols) */}
-        <div className="lg:col-span-2 bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 space-y-6 shadow-xs">
+        <div className="lg:col-span-2 bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-8 space-y-6 shadow-xs">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-bold text-slate-900 text-lg">Top Performing Quizzes</h3>
+              <h3 className="font-bold text-slate-900 text-base sm:text-lg">Top Performing Quizzes</h3>
               <p className="text-xs text-slate-500">Quizzes with highest student engagement</p>
             </div>
             <Link
@@ -126,22 +126,22 @@ export const TeacherDashboard: React.FC = () => {
               {stats.popularQuizzes.map((quiz: any) => (
                 <div
                   key={quiz.id}
-                  className="py-3.5 flex items-center justify-between gap-4 hover:bg-slate-50/60 p-2 rounded-xl transition"
+                  className="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50/60 p-2.5 rounded-xl transition"
                 >
                   <div className="space-y-1 min-w-0">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <SubjectBadge subject={quiz.subject} />
                       <StatusBadge status={quiz.status} />
                     </div>
                     <h4 className="font-bold text-slate-900 text-sm truncate">{quiz.title}</h4>
-                    <span className="text-xs text-slate-500 font-medium">
+                    <span className="text-xs text-slate-500 font-medium block">
                       {quiz.attemptsCount} student attempt(s)
                     </span>
                   </div>
 
                   <Link
                     to={`/teacher/quizzes/${quiz.id}/results`}
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-bold transition shrink-0"
+                    className="inline-flex items-center justify-center gap-1 px-3.5 py-2 sm:py-1.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-bold transition shrink-0"
                   >
                     View Results
                   </Link>
@@ -217,8 +217,8 @@ export const TeacherDashboard: React.FC = () => {
         </div>
 
         {stats?.studentPerformance && stats.studentPerformance.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+          <div className="overflow-x-auto -mx-5 sm:mx-0 px-5 sm:px-0">
+            <table className="w-full text-left text-xs min-w-[540px]">
               <thead className="text-[11px] font-bold uppercase text-slate-400 border-b border-slate-100">
                 <tr>
                   <th className="pb-3">Student</th>

@@ -241,11 +241,11 @@ export const QuizBuilderPage: React.FC = () => {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-8">
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <button
             onClick={() => navigate('/teacher/quizzes')}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800 transition"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800 transition py-1"
           >
             <ArrowLeft className="w-3.5 h-3.5" /> Back to Quizzes
           </button>
@@ -254,11 +254,11 @@ export const QuizBuilderPage: React.FC = () => {
           </h1>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full sm:w-auto">
           <button
             type="button"
             onClick={openBankModal}
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-bold transition"
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-bold transition"
           >
             <Layers className="w-4 h-4 text-indigo-600" /> Import from Bank
           </button>
@@ -266,7 +266,7 @@ export const QuizBuilderPage: React.FC = () => {
             type="button"
             disabled={saving}
             onClick={() => handleSave(false)}
-            className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 shadow-md shadow-indigo-600/20 transition disabled:opacity-50"
+            className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 shadow-md shadow-indigo-600/20 transition disabled:opacity-50"
           >
             <Save className="w-4 h-4" /> {saving ? 'Saving...' : 'Save Quiz'}
           </button>
@@ -426,17 +426,17 @@ export const QuizBuilderPage: React.FC = () => {
 
       {/* Questions Section */}
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
               Questions ({questions.length})
             </h2>
             <p className="text-xs text-slate-500">
-              Build your assessment items. Click the radio circle next to an option to designate it as the correct answer.
+              Build your assessment items. Click the letter button next to an option to designate it as the correct answer.
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <button
               type="button"
               onClick={() => addQuestion('multiple-choice')}
@@ -459,12 +459,12 @@ export const QuizBuilderPage: React.FC = () => {
           {questions.map((q, qIdx) => (
             <div
               key={qIdx}
-              className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 space-y-5 shadow-xs"
+              className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-8 space-y-5 shadow-xs"
             >
               {/* Question Header & Order Buttons */}
               <div className="flex items-center justify-between gap-4 pb-3 border-b border-slate-100">
                 <div className="flex items-center gap-2">
-                  <span className="w-7 h-7 rounded-xl bg-indigo-600 text-white font-bold text-xs flex items-center justify-center">
+                  <span className="w-7 h-7 rounded-xl bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0">
                     {qIdx + 1}
                   </span>
                   <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
@@ -550,11 +550,11 @@ export const QuizBuilderPage: React.FC = () => {
                   const isCorrect = q.correctAnswer === opt && opt !== '';
 
                   return (
-                    <div key={optIdx} className="flex items-center gap-3">
+                    <div key={optIdx} className="flex items-center gap-2.5 sm:gap-3">
                       <button
                         type="button"
                         onClick={() => updateQuestionField(qIdx, 'correctAnswer', opt)}
-                        className={`w-7 h-7 rounded-xl flex items-center justify-center text-xs font-bold border transition ${
+                        className={`w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold border transition shrink-0 ${
                           isCorrect
                             ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
                             : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'
@@ -569,7 +569,7 @@ export const QuizBuilderPage: React.FC = () => {
                         value={opt}
                         onChange={(e) => updateOptionText(qIdx, optIdx, e.target.value)}
                         placeholder={`Choice ${letter}...`}
-                        className={`flex-1 px-4 py-2 rounded-xl border text-sm transition focus:outline-none ${
+                        className={`flex-1 px-3.5 sm:px-4 py-2 rounded-xl border text-sm transition focus:outline-none ${
                           isCorrect
                             ? 'border-emerald-500 bg-emerald-50/30 text-emerald-950 font-bold ring-1 ring-emerald-500'
                             : 'border-slate-200 bg-white'
@@ -615,18 +615,18 @@ export const QuizBuilderPage: React.FC = () => {
         </div>
 
         {/* Bottom add buttons */}
-        <div className="flex items-center justify-center gap-3 py-4">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 py-4">
           <button
             type="button"
             onClick={() => addQuestion('multiple-choice')}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-white border border-slate-200 text-slate-800 text-xs font-bold hover:bg-slate-50 transition shadow-xs"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-white border border-slate-200 text-slate-800 text-xs font-bold hover:bg-slate-50 transition shadow-xs"
           >
             <Plus className="w-4 h-4 text-indigo-600" /> Add Another Multiple Choice
           </button>
           <button
             type="button"
             onClick={() => addQuestion('true-false')}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-white border border-slate-200 text-slate-800 text-xs font-bold hover:bg-slate-50 transition shadow-xs"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-white border border-slate-200 text-slate-800 text-xs font-bold hover:bg-slate-50 transition shadow-xs"
           >
             <Plus className="w-4 h-4 text-slate-500" /> Add True / False Question
           </button>

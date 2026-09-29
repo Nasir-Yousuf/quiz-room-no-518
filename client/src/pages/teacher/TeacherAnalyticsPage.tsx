@@ -75,7 +75,7 @@ export const TeacherAnalyticsPage: React.FC = () => {
       </div>
 
       {/* Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <StatsCard
           label="Total Student Submissions"
           value={stats?.totalAttempts ?? 0}
@@ -107,10 +107,10 @@ export const TeacherAnalyticsPage: React.FC = () => {
       </div>
 
       {/* Deep-Dive Per-Quiz Analytics (Requirement 18) */}
-      <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 space-y-6 shadow-xs">
+      <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-8 space-y-6 shadow-xs">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h3 className="font-bold text-slate-900 text-lg">Quiz Diagnostic Breakdown</h3>
+            <h3 className="font-bold text-slate-900 text-base sm:text-lg">Quiz Diagnostic Breakdown</h3>
             <p className="text-xs text-slate-500">
               Inspect question-by-question difficulty and frequently missed concepts
             </p>
@@ -134,34 +134,34 @@ export const TeacherAnalyticsPage: React.FC = () => {
         {quizAnalytics ? (
           <div className="space-y-6">
             {/* Quick Metrics for selected quiz */}
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 text-center">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3">
+              <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-50 border border-slate-100 text-center">
                 <span className="text-[10px] font-bold text-slate-400 uppercase">Submissions</span>
-                <span className="text-lg font-black text-slate-900 block mt-0.5">
+                <span className="text-base sm:text-lg font-black text-slate-900 block mt-0.5">
                   {quizAnalytics.totalAttempts}
                 </span>
               </div>
-              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 text-center">
+              <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-50 border border-slate-100 text-center">
                 <span className="text-[10px] font-bold text-slate-400 uppercase">Average Score</span>
-                <span className="text-lg font-black text-indigo-600 block mt-0.5">
+                <span className="text-base sm:text-lg font-black text-indigo-600 block mt-0.5">
                   {quizAnalytics.avgScore}%
                 </span>
               </div>
-              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 text-center">
+              <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-50 border border-slate-100 text-center">
                 <span className="text-[10px] font-bold text-slate-400 uppercase">Pass Rate</span>
-                <span className="text-lg font-black text-emerald-600 block mt-0.5">
+                <span className="text-base sm:text-lg font-black text-emerald-600 block mt-0.5">
                   {quizAnalytics.passRate}%
                 </span>
               </div>
-              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 text-center">
+              <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-50 border border-slate-100 text-center">
                 <span className="text-[10px] font-bold text-slate-400 uppercase">Highest Score</span>
-                <span className="text-lg font-black text-slate-800 block mt-0.5">
+                <span className="text-base sm:text-lg font-black text-slate-800 block mt-0.5">
                   {quizAnalytics.highestScore}%
                 </span>
               </div>
-              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 text-center">
+              <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-50 border border-slate-100 text-center col-span-2 sm:col-span-1">
                 <span className="text-[10px] font-bold text-slate-400 uppercase">Avg Time</span>
-                <span className="text-lg font-black text-slate-800 block mt-0.5">
+                <span className="text-base sm:text-lg font-black text-slate-800 block mt-0.5">
                   {quizAnalytics.avgTimeMinutes}m
                 </span>
               </div>
@@ -243,15 +243,15 @@ export const TeacherAnalyticsPage: React.FC = () => {
       </div>
 
       {/* Student Performance Ranking Table */}
-      <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 space-y-4 shadow-xs">
-        <h3 className="font-bold text-slate-900 text-lg">Student Leaderboard & Ranking</h3>
+      <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-8 space-y-4 shadow-xs">
+        <h3 className="font-bold text-slate-900 text-base sm:text-lg">Student Leaderboard & Ranking</h3>
         <p className="text-xs text-slate-500">
           Ranked by highest cumulative assessment average
         </p>
 
         {stats?.studentPerformance && stats.studentPerformance.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+          <div className="overflow-x-auto -mx-5 sm:mx-0 px-5 sm:px-0">
+            <table className="w-full text-left text-xs min-w-[500px]">
               <thead className="text-[11px] font-bold uppercase text-slate-400 border-b border-slate-100">
                 <tr>
                   <th className="pb-3 w-16">Rank</th>

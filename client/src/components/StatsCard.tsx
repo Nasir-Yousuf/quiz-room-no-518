@@ -26,26 +26,26 @@ export const StatsCard: React.FC<StatsCardProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{label}</p>
-          <p className="text-2xl lg:text-3xl font-extrabold text-slate-900 mt-1 tracking-tight">
+    <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+      <div className="flex items-start sm:items-center justify-between gap-2">
+        <div className="min-w-0 flex-1">
+          <p className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider truncate">{label}</p>
+          <p className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 mt-0.5 sm:mt-1 tracking-tight truncate">
             {value}
           </p>
           {subtitle && (
-            <p className="text-xs text-slate-500 mt-1.5 flex items-center gap-1">
+            <p className="text-[10px] sm:text-xs text-slate-500 mt-1 sm:mt-1.5 truncate">
               {subtitle}
             </p>
           )}
           {trend && (
-            <span className="inline-flex items-center text-xs font-medium text-emerald-600 mt-1.5">
+            <span className="inline-flex items-center text-[10px] sm:text-xs font-medium text-emerald-600 mt-1">
               {trend}
             </span>
           )}
         </div>
         <div
-          className={`w-12 h-12 rounded-xl flex items-center justify-center border shrink-0 transition-transform group-hover:scale-105 ${iconBgs[colorScheme]}`}
+          className={`w-9 h-9 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center border shrink-0 transition-transform group-hover:scale-105 [&>svg]:w-4 [&>svg]:h-4 sm:[&>svg]:w-6 sm:[&>svg]:h-6 ${iconBgs[colorScheme]}`}
         >
           {icon}
         </div>
