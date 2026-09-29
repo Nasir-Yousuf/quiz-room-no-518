@@ -34,8 +34,15 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // Cross-Origin Resource Sharing
+const rawClientOrigin = process.env.CLIENT_ORIGIN || '';
+const configuredOrigins = rawClientOrigin
+  .split(',')
+  .map((o) => o.trim().replace(/\/+$/, ''))
+  .filter(Boolean);
+
 const allowedOrigins = [
-  process.env.CLIENT_ORIGIN || 'http://localhost:5173',
+  ...configuredOrigins,
+  'http://localhost:5173',
   'http://127.0.0.1:5173',
   'http://localhost:3000',
 ];
@@ -44,10 +51,19 @@ app.use(
   cors({
     origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
       // Allow requests with no origin (like mobile apps, curl, Postman)
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin) {
         return callback(null, true);
       }
-      return callback(null, true); // Permissive in dev for smooth local testing
+      const cleanOrigin = origin.replace(/\/+$/, '');
+      const isAllowed =
+        allowedOrigins.includes(cleanOrigin) ||
+        cleanOrigin.endsWith('.vercel.app') ||
+        allowedOrigins.some((allowed) => cleanOrigin.startsWith(allowed));
+
+      if (isAllowed) {
+        return callback(null, true);
+      }
+      return callback(null, true); // Permissive fallback
     },
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
