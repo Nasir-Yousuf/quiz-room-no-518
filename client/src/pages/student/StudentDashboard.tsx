@@ -60,16 +60,16 @@ export const StudentDashboard: React.FC = () => {
             Welcome back, {user?.name}! 👋
           </h1>
           <p className="text-xs sm:text-sm text-indigo-200 max-w-xl">
-            Keep testing your frontend engineering skills. Track your mastery across HTML, CSS, and JavaScript.
+            Self-paced practice mode active. Test yourself freely across React, Next.js, TypeScript, Python, HTML, CSS, JavaScript, and Node.js.
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <Link
             to="/student/quizzes"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-indigo-900 text-xs font-bold hover:bg-indigo-50 shadow-md transition hover:scale-105"
           >
             <BookOpen className="w-4 h-4 text-indigo-600" />
-            Browse Quizzes
+            Explore All Quizzes
           </Link>
           <Link
             to="/student/classes"
@@ -77,6 +77,47 @@ export const StudentDashboard: React.FC = () => {
           >
             Join a Class
           </Link>
+        </div>
+      </div>
+
+      {/* Quick Self-Study Practice Topic Bar */}
+      <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+          <div className="flex items-center gap-2">
+            <span className="w-6 h-6 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs">
+              ⚡
+            </span>
+            <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-800">
+              Quick 15-Question Practice Sprints (No Teacher Needed)
+            </h3>
+          </div>
+          <Link
+            to="/student/quizzes"
+            className="text-xs font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-1"
+          >
+            Customize Question Count (15, 30, 50, 100 Qs) <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        <div className="flex items-center gap-2 overflow-x-auto pb-1">
+          {[
+            { name: 'React', color: 'hover:border-cyan-400 hover:bg-cyan-50/50' },
+            { name: 'Next.js', color: 'hover:border-slate-400 hover:bg-slate-50' },
+            { name: 'TypeScript', color: 'hover:border-blue-400 hover:bg-blue-50/50' },
+            { name: 'Python', color: 'hover:border-emerald-400 hover:bg-emerald-50/50' },
+            { name: 'JavaScript', color: 'hover:border-amber-400 hover:bg-amber-50/50' },
+            { name: 'HTML', color: 'hover:border-orange-400 hover:bg-orange-50/50' },
+            { name: 'CSS', color: 'hover:border-sky-400 hover:bg-sky-50/50' },
+            { name: 'Node.js', color: 'hover:border-green-400 hover:bg-green-50/50' },
+          ].map((topic) => (
+            <Link
+              key={topic.name}
+              to={`/student/quizzes?subject=${topic.name}`}
+              className={`px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 transition shrink-0 ${topic.color}`}
+            >
+              {topic.name} Sprint »
+            </Link>
+          ))}
         </div>
       </div>
 
@@ -176,9 +217,15 @@ export const StudentDashboard: React.FC = () => {
             {stats?.subjectBreakdown && stats.subjectBreakdown.length > 0 ? (
               stats.subjectBreakdown.map((item: any) => {
                 let barColor = 'bg-indigo-600';
-                if (item.subject === 'HTML') barColor = 'bg-orange-500';
-                if (item.subject === 'CSS') barColor = 'bg-sky-500';
-                if (item.subject === 'JavaScript') barColor = 'bg-amber-500';
+                const sub = item.subject.toLowerCase();
+                if (sub === 'html') barColor = 'bg-orange-500';
+                else if (sub === 'css') barColor = 'bg-sky-500';
+                else if (sub === 'javascript') barColor = 'bg-amber-500';
+                else if (sub === 'typescript') barColor = 'bg-blue-600';
+                else if (sub === 'react') barColor = 'bg-cyan-500';
+                else if (sub === 'next.js') barColor = 'bg-slate-900';
+                else if (sub === 'python') barColor = 'bg-emerald-600';
+                else if (sub === 'node.js') barColor = 'bg-green-600';
 
                 return (
                   <div key={item.subject} className="space-y-1.5">

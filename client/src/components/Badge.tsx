@@ -6,13 +6,23 @@ export const SubjectBadge: React.FC<{ subject: string; className?: string }> = (
   className = '',
 }) => {
   let color = 'bg-indigo-50 text-indigo-700 border-indigo-200';
-
-  if (subject === 'HTML') {
+  const sub = subject.toLowerCase();
+  if (sub === 'html') {
     color = 'bg-orange-50 text-orange-700 border-orange-200';
-  } else if (subject === 'CSS') {
+  } else if (sub === 'css') {
     color = 'bg-sky-50 text-sky-700 border-sky-200';
-  } else if (subject === 'JavaScript') {
+  } else if (sub === 'javascript') {
     color = 'bg-amber-50 text-amber-800 border-amber-200';
+  } else if (sub === 'typescript') {
+    color = 'bg-blue-50 text-blue-700 border-blue-200';
+  } else if (sub === 'react') {
+    color = 'bg-cyan-50 text-cyan-700 border-cyan-200';
+  } else if (sub === 'next.js') {
+    color = 'bg-slate-900 text-white border-slate-700';
+  } else if (sub === 'python') {
+    color = 'bg-emerald-50 text-emerald-800 border-emerald-200';
+  } else if (sub === 'node.js') {
+    color = 'bg-green-50 text-green-700 border-green-200';
   }
 
   return (

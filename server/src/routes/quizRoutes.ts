@@ -4,6 +4,7 @@ import {
   getTeacherQuizzes,
   getQuizByShareCode,
   getQuizForTaking,
+  createPracticeQuiz,
   getQuizForEditor,
   createQuiz,
   updateQuiz,
@@ -16,6 +17,7 @@ const router = Router();
 
 // Public & Student discovery
 router.get('/', getQuizzes);
+router.post('/practice', protect, createPracticeQuiz);
 router.get('/share/:shareCode', getQuizByShareCode);
 router.get('/:id/take', protect, getQuizForTaking);
 

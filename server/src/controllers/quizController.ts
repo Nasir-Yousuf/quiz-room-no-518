@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import crypto from 'crypto';
 import Quiz from '../models/Quiz.js';
+import User from '../models/User.js';
+import QuestionBank from '../models/QuestionBank.js';
 import { AuthRequest } from '../types/index.js';
 
 const generateShareCode = (): string => {
@@ -14,12 +16,12 @@ export const getQuizzes = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { subject, difficulty, search, page = '1', limit = '12' } = req.query;
+    const { subject, difficulty, search, page = '1', limit = '50' } = req.query;
 
     const query: any = { status: 'published' };
 
     if (subject && subject !== 'All') {
-      query.subject = subject;
+      query.subject = { $regex: new RegExp(`^${subject}$`, 'i') };
     }
 
     if (difficulty && difficulty !== 'All') {
@@ -149,18 +151,153 @@ export const getQuizForTaking = async (
       return;
     }
 
-    // Optionally randomize questions order if quiz settings specify it
+    const requestedCount = req.query.limit || req.query.count;
+    const limitNum = requestedCount ? parseInt(String(requestedCount), 10) : 0;
+
+    // Optionally randomize questions order if quiz settings specify it or if student requested custom limit
     let preparedQuestions = [...quiz.questions];
-    if (quiz.randomizeQuestions) {
+    if (quiz.randomizeQuestions || limitNum > 0) {
       preparedQuestions = preparedQuestions.sort(() => Math.random() - 0.5);
+    }
+
+    let calculatedTimeLimit = quiz.timeLimit;
+    if (limitNum > 0 && limitNum < preparedQuestions.length) {
+      if (quiz.timeLimit > 0 && quiz.questions.length > 0) {
+        calculatedTimeLimit = Math.max(5, Math.round((quiz.timeLimit / quiz.questions.length) * limitNum));
+      }
+      preparedQuestions = preparedQuestions.slice(0, limitNum);
     }
 
     const sanitizedQuiz = quiz.toObject();
     sanitizedQuiz.questions = preparedQuestions;
+    sanitizedQuiz.timeLimit = calculatedTimeLimit;
 
     res.status(200).json({
       success: true,
       quiz: sanitizedQuiz,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Student Self-Study: Generate instant practice quiz by topic and custom question count
+export const createPracticeQuiz = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    if (!req.user) {
+      res.status(401).json({ success: false, message: 'Unauthorized' });
+      return;
+    }
+
+    const { subject = 'All', count = 15, difficulty = 'All' } = req.body;
+    const targetCount = Math.max(5, Math.min(100, parseInt(String(count), 10) || 15));
+
+    const quizFilter: any = { status: 'published' };
+    const bankFilter: any = {};
+
+    if (subject && subject !== 'All') {
+      quizFilter.subject = new RegExp(`^${subject}$`, 'i');
+      bankFilter.subject = new RegExp(`^${subject}$`, 'i');
+    }
+    if (difficulty && difficulty !== 'All') {
+      quizFilter.difficulty = difficulty;
+      bankFilter.difficulty = difficulty;
+    }
+
+    const [quizzes, bankQuestions] = await Promise.all([
+      Quiz.find(quizFilter).lean(),
+      QuestionBank.find(bankFilter).lean(),
+    ]);
+
+    const pool: any[] = [];
+    quizzes.forEach((q) => {
+      if (Array.isArray(q.questions)) {
+        q.questions.forEach((qu: any) => {
+          pool.push({
+            questionText: qu.questionText,
+            type: qu.type || 'multiple-choice',
+            options: qu.options,
+            correctAnswer: qu.correctAnswer,
+            explanation: qu.explanation || '',
+            codeSnippet: qu.codeSnippet || '',
+            points: qu.points || 1,
+          });
+        });
+      }
+    });
+
+    bankQuestions.forEach((bq: any) => {
+      pool.push({
+        questionText: bq.questionText,
+        type: bq.type || 'multiple-choice',
+        options: bq.options,
+        correctAnswer: bq.correctAnswer,
+        explanation: bq.explanation || '',
+        codeSnippet: bq.codeSnippet || '',
+        points: bq.points || 1,
+      });
+    });
+
+    // Deduplicate questions by questionText
+    const uniqueMap = new Map<string, any>();
+    pool.forEach((item) => {
+      const key = item.questionText.trim().toLowerCase();
+      if (!uniqueMap.has(key)) {
+        uniqueMap.set(key, item);
+      }
+    });
+
+    let uniqueQuestions = Array.from(uniqueMap.values()).sort(() => Math.random() - 0.5);
+
+    if (uniqueQuestions.length === 0) {
+      res.status(404).json({
+        success: false,
+        message: `No questions found for topic "${subject}". Try another topic.`,
+      });
+      return;
+    }
+
+    // If available questions are fewer than target count, cycle questions to meet requested length
+    let selectedQuestions = uniqueQuestions.slice(0, targetCount);
+    if (selectedQuestions.length < targetCount && uniqueQuestions.length > 0) {
+      while (selectedQuestions.length < targetCount) {
+        selectedQuestions.push(...uniqueQuestions.slice(0, targetCount - selectedQuestions.length));
+      }
+    }
+
+    let teacherUser = await User.findOne({ role: 'teacher' });
+    if (!teacherUser) {
+      teacherUser = await User.findOne({});
+    }
+
+    const shareCode = `practice-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 6)}`;
+    const effectiveSubject = subject === 'All' ? 'Full-Stack' : subject;
+    const timeLimitMinutes = Math.max(10, Math.round(selectedQuestions.length * 1.5));
+
+    const practiceQuiz = await Quiz.create({
+      title: `${effectiveSubject} Self-Assessment (${selectedQuestions.length} Questions)`,
+      description: `Instant self-study test covering ${effectiveSubject}. Includes automated grading, anti-cheat detection, and comprehensive explanation reviews.`,
+      subject: effectiveSubject,
+      difficulty: difficulty === 'All' ? 'intermediate' : (difficulty as any),
+      teacher: teacherUser?._id,
+      status: 'published',
+      timeLimit: timeLimitMinutes,
+      passingPercentage: 70,
+      maxAttempts: 0,
+      randomizeQuestions: true,
+      randomizeAnswers: false,
+      showCorrectAnswers: true,
+      shareCode,
+      questions: selectedQuestions,
+    });
+
+    res.status(201).json({
+      success: true,
+      quiz: practiceQuiz,
     });
   } catch (error) {
     next(error);

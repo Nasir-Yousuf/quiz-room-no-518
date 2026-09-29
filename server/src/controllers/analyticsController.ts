@@ -60,11 +60,21 @@ export const getStudentDashboardStats = async (
     subjectBreakdown.forEach((s) => {
       if (s.average < 70) {
         if (s.subject === 'JavaScript') {
-          suggestedFocus.push('JavaScript Scope & Closures', 'Async/Await & Promises', 'DOM Manipulation');
+          suggestedFocus.push('JavaScript Scope & Closures', 'Async/Await & Promises', 'Event Loop & Prototypes');
         } else if (s.subject === 'CSS') {
           suggestedFocus.push('CSS Grid & Flexbox layouts', 'CSS Specificity & Cascade', 'Responsive Media Queries');
         } else if (s.subject === 'HTML') {
           suggestedFocus.push('Semantic HTML5 Tags', 'ARIA Accessibility Roles', 'Form Validation Attributes');
+        } else if (s.subject === 'React') {
+          suggestedFocus.push('React 18 Hooks (useMemo, useCallback)', 'State Management & Context API', 'Component Lifecycle & Re-renders');
+        } else if (s.subject === 'Next.js') {
+          suggestedFocus.push('App Router & Server Components', 'Server Actions & Hydration', 'Static Generation vs SSR');
+        } else if (s.subject === 'TypeScript') {
+          suggestedFocus.push('Generics & Utility Types', 'Discriminated Unions & Type Narrowing', 'Strict Type Checking');
+        } else if (s.subject === 'Python') {
+          suggestedFocus.push('List Comprehensions & Generators', 'Decorators & OOP Architecture', 'Exception Handling & Dictionaries');
+        } else if (s.subject === 'Node.js') {
+          suggestedFocus.push('Event Loop & Stream Pipelines', 'Express Middleware Pipeline', 'Async I/O & Error Handling');
         } else {
           suggestedFocus.push(`${s.subject} Core Fundamentals`);
         }

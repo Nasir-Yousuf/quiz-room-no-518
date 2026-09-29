@@ -96,6 +96,10 @@ flowchart TD
 ## 🚀 Key Features
 
 ### 🎓 Student Experience
+- **Open Self-Study & Custom Question Limits (No Teacher Required)**:
+  - Take open assessments anytime across 8 core topics: **HTML**, **CSS**, **JavaScript**, **TypeScript**, **React**, **Next.js**, **Python**, and **Node.js**.
+  - Choose your preferred test length: **10**, **15**, **25**, **30**, **50**, or **100** questions with proportionally scaled time limits.
+  - Instant Self-Study Practice Room generator with automated grading and solution walkthroughs.
 - **Interactive Exam Engine**:
   - Live countdown timer with automatic background submission upon expiry.
   - Multi-type questions: Multiple Choice (single/multi-select) and True/False questions.
@@ -112,9 +116,9 @@ flowchart TD
   - Immutable question-by-question review with detailed explanations and correct answers revealed.
 - **Performance Analytics & Learning Progression**:
   - Chronological test attempt timeline and score charts.
-  - Subject-by-subject mastery bars (e.g., HTML, CSS, JavaScript).
+  - Subject-by-subject mastery bars across all 8 disciplines.
   - Rule-based learning insights recommending topics needing remediation.
-- **Cohort Enrollment**: Join classes directly via teacher-issued cohort codes (e.g. `WEB-2026`).
+- **Cohort Enrollment (Optional)**: Join university or school classes directly via teacher invite codes (e.g. `WEB-2026`).
 
 ---
 
@@ -258,8 +262,9 @@ npm run dev:client
 
 ### 📝 Quizzes (`/api/quizzes`)
 - `GET /api/quizzes` — Browse published quizzes (with subject and difficulty filters)
+- `POST /api/quizzes/practice` — Generate instant self-study practice quiz with custom question count
 - `GET /api/quizzes/share/:shareCode` — Retrieve public quiz metadata via share code
-- `GET /api/quizzes/:id/take` — Fetch sanitized questions for an active attempt (correct answers omitted)
+- `GET /api/quizzes/:id/take` — Fetch sanitized questions for an active attempt (supports `?limit=15`)
 - `GET /api/quizzes/teacher/mine` — Retrieve all quizzes authored by current educator
 - `GET /api/quizzes/:id/editor` — Fetch complete quiz data including answer keys for authoring
 - `POST /api/quizzes` — Create a new quiz

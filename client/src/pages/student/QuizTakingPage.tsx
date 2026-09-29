@@ -42,7 +42,9 @@ export const QuizTakingPage: React.FC = () => {
     const fetchQuiz = async () => {
       try {
         setLoading(true);
-        const res = await api.get(`/api/quizzes/${id}/take`);
+        const limitParam = searchParams.get('limit') || searchParams.get('count');
+        const url = `/api/quizzes/${id}/take` + (limitParam ? `?limit=${limitParam}` : '');
+        const res = await api.get(url);
         if (res.success && res.quiz) {
           setQuiz(res.quiz);
           if (res.quiz.timeLimit > 0) {
@@ -58,7 +60,7 @@ export const QuizTakingPage: React.FC = () => {
     };
 
     fetchQuiz();
-  }, [id, navigate, showToast]);
+  }, [id, searchParams, navigate, showToast]);
 
   const submitQuiz = useCallback(async () => {
     if (!quiz || submitting) return;
@@ -190,9 +192,14 @@ export const QuizTakingPage: React.FC = () => {
       {/* Top Session Bar */}
       <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs flex flex-wrap items-center justify-between gap-4">
         <div>
-          <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">
-            {quiz.subject}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">
+              {quiz.subject}
+            </span>
+            <span className="text-[11px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+              {quiz.questions?.length} Questions
+            </span>
+          </div>
           <h2 className="text-base sm:text-lg font-bold text-slate-900 mt-1">{quiz.title}</h2>
         </div>
 

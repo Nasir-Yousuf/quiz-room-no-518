@@ -143,13 +143,23 @@ export const StudentProgressPage: React.FC = () => {
           </div>
 
           {/* Filter tabs */}
-          <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-slate-400" />
-            {['All', 'HTML', 'CSS', 'JavaScript'].map((sub) => (
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+            <Filter className="w-4 h-4 text-slate-400 shrink-0" />
+            {[
+              'All',
+              'HTML',
+              'CSS',
+              'JavaScript',
+              'TypeScript',
+              'React',
+              'Next.js',
+              'Python',
+              'Node.js',
+            ].map((sub) => (
               <button
                 key={sub}
                 onClick={() => setSelectedSubject(sub)}
-                className={`px-3 py-1 rounded-xl text-xs font-semibold transition ${
+                className={`px-3 py-1 rounded-xl text-xs font-semibold transition shrink-0 ${
                   selectedSubject === sub
                     ? 'bg-indigo-600 text-white shadow-xs'
                     : 'text-slate-600 hover:bg-slate-100'

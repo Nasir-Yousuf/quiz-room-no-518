@@ -46,17 +46,33 @@ export const submitQuizAttempt = async (
 
     // Map submitted answers by questionId or question index
     const submissionMap = new Map<string, string>();
+    const submittedQuestionIdSet = new Set<string>();
+
     if (Array.isArray(answers)) {
       answers.forEach((ans: any) => {
         if (ans.questionId) {
-          submissionMap.set(String(ans.questionId), String(ans.selectedAnswer || ''));
+          const qId = String(ans.questionId);
+          submissionMap.set(qId, String(ans.selectedAnswer || ''));
+          submittedQuestionIdSet.add(qId);
         } else if (ans.questionIndex !== undefined) {
           submissionMap.set(`idx_${ans.questionIndex}`, String(ans.selectedAnswer || ''));
         }
       });
     }
 
-    quiz.questions.forEach((q, idx) => {
+    // Determine questions to evaluate: if student took a subset of questions (e.g. chosen limit),
+    // evaluate only the questions they were presented with
+    let questionsToEvaluate = quiz.questions;
+    if (submittedQuestionIdSet.size > 0 && submittedQuestionIdSet.size < quiz.questions.length) {
+      const matched = quiz.questions.filter((q) => q._id && submittedQuestionIdSet.has(q._id.toString()));
+      if (matched.length > 0) {
+        questionsToEvaluate = matched;
+      }
+    } else if (Array.isArray(answers) && answers.length > 0 && answers.length < quiz.questions.length) {
+      questionsToEvaluate = quiz.questions.slice(0, answers.length);
+    }
+
+    questionsToEvaluate.forEach((q, idx) => {
       const qIdStr = q._id ? q._id.toString() : '';
       const selected = submissionMap.get(qIdStr) ?? submissionMap.get(`idx_${idx}`) ?? '';
       
